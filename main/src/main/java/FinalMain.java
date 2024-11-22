@@ -9,10 +9,7 @@ import java.awt.*;
 
 public class FinalMain {
     public static void main(String[] args) {
-        LoginView loginView = new LoginView();
-        SignUpView signUpView = new SignUpView();
-        ForgetPasswordView forgetPasswordView = new ForgetPasswordView();
-        MainView mainView = new MainView(loginView, signUpView, forgetPasswordView);
+        MainView mainView = new MainView(new LoginView(), new SignUpView(), new ForgetPasswordView());
         mainView.setBackground(Color.blue);
         mainView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainView.setSize(800, 600);
