@@ -4,11 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.classfile.Label;
-import java.util.jar.JarEntry;
 
 public class LoginView extends JPanel implements ActionListener {
-    final Font font = new Font("Times New Roman",Font.PLAIN, 25);
+
+    private final Font font = new Font("Times New Roman",Font.PLAIN, 25);
+
+    private JButton loginButton = new JButton("Login");
+
+    private JButton createAnAccount = new JButton("create an account");
+
+    private JButton reset = new JButton("reset");
+
+    private JTextField nameField = new JTextField();
+
+    private JPasswordField passwordField = new JPasswordField();
+
     public LoginView() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -18,7 +28,7 @@ public class LoginView extends JPanel implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         JLabel label1 = new JLabel("Crypto calculator and currency conversion");
         label1.setHorizontalAlignment(SwingConstants.CENTER);
-        label1.setFont(new Font("Times New Roman",Font.BOLD | Font.ITALIC, 30));
+        label1.setFont(font);
         add(label1, gbc);
         JLabel label2 = new JLabel("Welcome");
         label2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -35,22 +45,19 @@ public class LoginView extends JPanel implements ActionListener {
         label4.setFont(new Font("Times New Roman",Font.PLAIN, 20));
         label4.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label4);
-        JTextField textField = new JTextField();
-        textField.setMaximumSize(new Dimension(600, 30));
-        textField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.add(textField);
+        nameField.setMaximumSize(new Dimension(600, 30));
+        nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(nameField);
         JLabel label5 = new JLabel("Password");
         label5.setFont(new Font("Times New Roman",Font.PLAIN, 20));
         label5.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label5);
-        JPasswordField passwordField = new JPasswordField();
         passwordField.setMaximumSize(new Dimension(600, 30));
         passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(passwordField);
         add(panel, gbc);
 
         JPanel panel_1 = new JPanel();
-        JButton loginButton = new JButton("Login");
         loginButton.setPreferredSize(new Dimension(100, 30));
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(this);
@@ -60,12 +67,12 @@ public class LoginView extends JPanel implements ActionListener {
 
         JPanel panel_2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel_2.add(new JLabel("New to the APP?"));
-        panel_2.add(new JButton("create an account"));
+        panel_2.add(createAnAccount);
         add(panel_2, gbc);
 
         JPanel panel_3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel_3.add(new JLabel("Forget password? Need to reset?"));
-        panel_3.add(new JButton("reset"));
+        panel_3.add(reset);
         add(panel_3, gbc);
 
     }
