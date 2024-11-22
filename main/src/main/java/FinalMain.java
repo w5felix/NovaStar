@@ -1,4 +1,3 @@
-import org.example.Main;
 import views.ForgetPasswordView;
 import views.LoginView;
 import views.MainView;
