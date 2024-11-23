@@ -2,8 +2,10 @@ package views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class MainView extends JFrame {
+public class MainView extends JFrame implements PropertyChangeListener {
     private CardLayout cardLayout;
 
     public MainView(LoginView loginView,SignUpView signUpView, ForgetPasswordView forgetPasswordView) {
@@ -16,5 +18,10 @@ public class MainView extends JFrame {
         cardLayout.show(views, "login");
         this.add(views);
         setBackground(Color.blue);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
     }
 }

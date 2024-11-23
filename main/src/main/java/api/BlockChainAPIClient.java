@@ -1,4 +1,4 @@
-package org.example;
+package api;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
