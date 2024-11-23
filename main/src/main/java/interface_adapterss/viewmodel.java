@@ -7,7 +7,8 @@ public class viewmodel {
 
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-    public void addPropertyChangeListener(String name, PropertyChangeListener pcl) {
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        String name = "";
         propertyChangeSupport.addPropertyChangeListener(name, pcl);
     }
 }
