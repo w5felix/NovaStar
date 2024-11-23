@@ -1,5 +1,7 @@
 package views;
 
+import interface_adapterss.ViewModel;
+
 import javax.swing.*;
 
 public class SignUpView extends JPanel {
@@ -18,7 +20,12 @@ public class SignUpView extends JPanel {
 
     private JPasswordField answerField = new JPasswordField();
 
-    public SignUpView() {
+    private final ViewModel viewmodel;
+
+    public SignUpView(ViewModel viewmodel) {
+
+        this.viewmodel = viewmodel;
+
         setLayout(new BoxLayout(SignUpView.this, BoxLayout.Y_AXIS));
         JLabel titleLabel = new JLabel("Sign Up");
         JLabel nameLabel = new JLabel("Username:");
@@ -45,5 +52,10 @@ public class SignUpView extends JPanel {
         add(verifyQuestionBox);
         add(answerLabel);
         add(answerField);
+        add(signUpButton);
+
+        signUpButton.addActionListener(e -> {
+            this.viewmodel.setCurrentState(ViewModel.LOGIN_VIEW);
+        });
     }
 }

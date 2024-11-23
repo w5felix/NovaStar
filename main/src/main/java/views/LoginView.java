@@ -1,13 +1,15 @@
 package views;
 
+import interface_adapterss.ViewModel;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class LoginView extends JPanel implements ActionListener {
+public class LoginView extends JPanel {
 
-    private final Font font = new Font("Times New Roman",Font.PLAIN, 25);
+    private final Font font = new Font("Times New Roman", Font.PLAIN, 25);
+
+    private final ViewModel viewModel;
 
     private JButton loginButton = new JButton("Login");
 
@@ -19,7 +21,10 @@ public class LoginView extends JPanel implements ActionListener {
 
     private JPasswordField passwordField = new JPasswordField();
 
-    public LoginView() {
+    public LoginView(ViewModel viewModel) {
+
+        this.viewModel = viewModel;
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -42,14 +47,14 @@ public class LoginView extends JPanel implements ActionListener {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JLabel label4 = new JLabel("Username or email address");
-        label4.setFont(new Font("Times New Roman",Font.PLAIN, 20));
+        label4.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         label4.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label4);
         nameField.setMaximumSize(new Dimension(600, 30));
         nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(nameField);
         JLabel label5 = new JLabel("Password");
-        label5.setFont(new Font("Times New Roman",Font.PLAIN, 20));
+        label5.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         label5.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label5);
         passwordField.setMaximumSize(new Dimension(600, 30));
@@ -60,7 +65,6 @@ public class LoginView extends JPanel implements ActionListener {
         JPanel panel_1 = new JPanel();
         loginButton.setPreferredSize(new Dimension(100, 30));
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginButton.addActionListener(this);
         panel_1.setLayout(new FlowLayout(FlowLayout.CENTER));
         panel_1.add(loginButton);
         add(panel_1, gbc);
@@ -75,10 +79,17 @@ public class LoginView extends JPanel implements ActionListener {
         panel_3.add(reset);
         add(panel_3, gbc);
 
-    }
+        loginButton.addActionListener(e -> {
+            this.viewModel.setCurrentState(ViewModel.AFTER_LOGIN_VIEW);
+        });
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+        createAnAccount.addActionListener(e -> {
+            this.viewModel.setCurrentState(ViewModel.SIGNUP_VIEW);
+        });
+
+        reset.addActionListener(e -> {
+            this.viewModel.setCurrentState(ViewModel.FORGET_PASSWORD_VIEW);
+        });
 
     }
 }
