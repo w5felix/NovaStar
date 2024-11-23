@@ -1,52 +1,33 @@
 package entities;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Transaction {
-    private String cryptoType;
-    private double amount;
-    private String convertedCurrency;
-    private double conversionRate;
-    private LocalDateTime timestamp;
+    private final String cryptoID;
+    private final double amount; // Amount of cryptocurrency
+    private final double price;  // Price per unit at the time of transaction
+    private final Date date;
 
-    // Constructor
-    public Transaction(String cryptoType, double amount, String convertedCurrency, double conversionRate) {
-        this.cryptoType = cryptoType;
+    public Transaction(String cryptoID, double amount, double price, Date date) {
+        this.cryptoID = cryptoID;
         this.amount = amount;
-        this.convertedCurrency = convertedCurrency;
-        this.conversionRate = conversionRate;
-        this.timestamp = LocalDateTime.now();
+        this.price = price;
+        this.date = date;
     }
 
-    // Getters and Setters
-    public String getCryptoType() {
-        return cryptoType;
+    public String getCryptoID() {
+        return cryptoID;
     }
 
     public double getAmount() {
         return amount;
     }
 
-    public String getConvertedCurrency() {
-        return convertedCurrency;
+    public double getPrice() {
+        return price;
     }
 
-    public double getConversionRate() {
-        return conversionRate;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "cryptoType='" + cryptoType + '\'' +
-                ", amount=" + amount +
-                ", convertedCurrency='" + convertedCurrency + '\'' +
-                ", conversionRate=" + conversionRate +
-                ", timestamp=" + timestamp +
-                '}';
+    public Date getDate() {
+        return date;
     }
 }
