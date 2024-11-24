@@ -1,116 +1,134 @@
 package entities;
 
-import java.sql.*;
+import api.BlockChainAPIClient;
+import api.FireBaseAPIClient;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class User {
-    private int id; // Database ID for user
-    private String name;
+    private String userId; // Unique identifier for the user
+    private String name;   // User's name
+    private double cashBalance; // User's cash balance (sync with Firebase)
+    private List<Transaction> transactions; // User's transaction history
+    private List<PortfolioEntry> portfolio; // Portfolio holdings
 
-    public User(int id, String name) {
-        this.id = id;
+    public User(String userId, String name) throws IOException {
+        this.userId = userId;
         this.name = name;
+        this.cashBalance = FireBaseAPIClient.getCashReserves(userId); // Fetch initial balance from Firebase
+        this.transactions = FireBaseAPIClient.getTransactions(userId); // Fetch transactions from Firebase
+        this.portfolio = FireBaseAPIClient.getPortfolioEntries(userId); // Fetch portfolio from Firebase
     }
 
-    // Buy crypto
-    public void buyCrypto(String cryptoName, double amount, double price, Date date) {
-        addTransactionToDB(cryptoName, amount, price, date, "BUY");
-    }
+    // Buy cryptocurrency
+    public void buyCrypto(String cryptoName, double amount) throws Exception {
+        String symbol = cryptoName + "-USD"; // Assuming USD trading pair
+        double price = BlockChainAPIClient.getCurrentPrice(symbol);
+        double cost = amount * price;
 
-    // Sell crypto
-    public void sellCrypto(String cryptoName, double amount, double price, Date date) {
-        addTransactionToDB(cryptoName, -amount, price, date, "SELL");
-    }
-
-    private void addTransactionToDB(String cryptoName, double amount, double price, Date date, String type) {
-        try (Connection connection = DatabaseManager.getConnection()) {
-            String sql = "INSERT INTO Transactions (user_id, crypto_name, amount, price, date, type) VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setInt(1, this.id);
-                stmt.setString(2, cryptoName);
-                stmt.setDouble(3, amount);
-                stmt.setDouble(4, price);
-                stmt.setDate(5, new java.sql.Date(date.getTime()));
-                stmt.setString(6, type);
-                stmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Calculate current portfolio value
-    public double calculatePortfolioValue() {
-        Map<String, Double> cryptoHoldings = calculateCurrentHoldings();
-        double portfolioValue = 0.0;
-
-        for (Map.Entry<String, Double> entry : cryptoHoldings.entrySet()) {
-            String cryptoName = entry.getKey();
-            double amountHeld = entry.getValue();
-            double realTimePrice = fetchRealTimeCryptoPrice(cryptoName);
-
-            portfolioValue += amountHeld * realTimePrice;
+        if (cashBalance < cost) {
+            throw new IllegalArgumentException("Insufficient cash balance to buy " + cryptoName);
         }
 
-        return portfolioValue;
+        cashBalance -= cost; // Deduct cash only after Firebase operation succeeds
+
+        // Create and save transaction
+        Transaction transaction = new Transaction(cryptoName, amount, price, new Date(), "BUY");
+        FireBaseAPIClient.addTransactionAndUpdatePortfolio(userId, transaction); // Save to Firebase
+
+        refreshPortfolio(); // Ensure portfolio is updated
+        refreshTransactions(); // Update transactions
     }
 
-    // Calculate current holdings
-    public Map<String, Double> calculateCurrentHoldings() {
-        Map<String, Double> holdings = new HashMap<>();
-        try (Connection connection = DatabaseManager.getConnection()) {
-            String sql = "SELECT crypto_name, SUM(amount) AS total FROM Transactions WHERE user_id = ? GROUP BY crypto_name";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setInt(1, this.id);
-                ResultSet rs = stmt.executeQuery();
 
-                while (rs.next()) {
-                    holdings.put(rs.getString("crypto_name"), rs.getDouble("total"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    // Sell cryptocurrency
+    public void sellCrypto(String cryptoName, double amount) throws Exception {
+        PortfolioEntry portfolioEntry = FireBaseAPIClient.getPortfolioEntry(userId, cryptoName);
+        if (portfolioEntry == null || portfolioEntry.getAmount() < amount) {
+            throw new IllegalArgumentException("Insufficient holdings to sell " + cryptoName);
         }
-        return holdings;
+
+        String symbol = cryptoName + "-USD"; // Assuming USD trading pair
+        double price = BlockChainAPIClient.getCurrentPrice(symbol);
+        double revenue = amount * price;
+
+        cashBalance += revenue;
+
+        Transaction transaction = new Transaction(cryptoName, amount, price, new Date(), "SELL");
+        FireBaseAPIClient.addTransactionAndUpdatePortfolio(userId, transaction); // Save to Firebase
+
+        refreshPortfolio(); // Ensure portfolio is updated
+        refreshTransactions(); // Update transactions
     }
 
-    // Calculate money spent on crypto
-    public double calculateMoneySpent() {
-        double moneySpent = 0.0;
-        try (Connection connection = DatabaseManager.getConnection()) {
-            String sql = "SELECT SUM(price * ABS(amount)) AS total_spent FROM Transactions WHERE user_id = ? AND type = 'BUY'";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setInt(1, this.id);
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    moneySpent = rs.getDouble("total_spent");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    // Deposit cash
+    public void depositCash(double amount) throws IOException {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be positive.");
         }
-        return moneySpent;
+        cashBalance += amount;
+        FireBaseAPIClient.addCash(userId, amount); // Update Firebase cash balance
     }
 
-    // Fetch real-time crypto prices (Simulated)
-    private double fetchRealTimeCryptoPrice(String cryptoName) {
-        try (Connection connection = DatabaseManager.getConnection()) {
-            String sql = "SELECT price FROM CryptoPrices WHERE crypto_name = ?";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, cryptoName);
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    return rs.getDouble("price");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    // Withdraw cash
+    public void withdrawCash(double amount) throws IOException {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive.");
         }
-        return 0.0; // Default to 0 if price not found
+        if (cashBalance < amount) {
+            throw new IllegalArgumentException("Insufficient balance for withdrawal.");
+        }
+        cashBalance -= amount;
+        FireBaseAPIClient.withdrawCash(userId, amount); // Update Firebase cash balance
+    }
+
+    // Calculate total portfolio value
+    public double calculatePortfolioValue() throws Exception {
+        double totalValue = cashBalance;
+
+        for (PortfolioEntry entry : getPortfolio()) {
+            String symbol = entry.getCryptoName() + "-USD";
+            double price = BlockChainAPIClient.getCurrentPrice(symbol);
+            totalValue += entry.getAmount() * price;
+        }
+        return totalValue;
+    }
+
+    // Refresh portfolio from Firebase
+    private void refreshPortfolio() throws IOException {
+        this.portfolio = FireBaseAPIClient.getPortfolioEntries(userId);
+    }
+
+    // Refresh transactions from Firebase
+    private void refreshTransactions() throws IOException {
+        this.transactions = FireBaseAPIClient.getTransactions(userId);
+    }
+
+    // Getters
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getCashBalance() throws IOException {
+        // Ensure we fetch the latest balance from Firebase
+        this.cashBalance = FireBaseAPIClient.getCashReserves(userId);
+        return cashBalance;
+    }
+
+    public List<Transaction> getTransactions() throws IOException {
+        refreshTransactions();
+        return transactions;
+    }
+
+    public List<PortfolioEntry> getPortfolio() throws IOException {
+        refreshPortfolio();
+        return portfolio;
     }
 }
-

@@ -1,13 +1,16 @@
 package api;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockChainAPIClient {
 
@@ -16,8 +19,12 @@ public class BlockChainAPIClient {
 
     public static void main(String[] args) {
         try {
-            String response = fetchTickers();
-            parseAndDisplay(response);
+            // Example: Fetch all popular cryptocurrencies
+            List<CryptoInfo> cryptos = fetchPopularCryptos();
+            for (CryptoInfo crypto : cryptos) {
+                System.out.printf("%s (%s): $%.2f (24h: %.2f%%)%n",
+                        crypto.getName(), crypto.getSymbol(), crypto.getCurrentPrice(), crypto.getPercentageChange());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,21 +49,85 @@ public class BlockChainAPIClient {
         return content.toString();
     }
 
-    private static void parseAndDisplay(String jsonResponse) {
-        try {
-            JSONParser parser = new JSONParser();
-            JSONArray jsonArray = (JSONArray) parser.parse(jsonResponse);
+    public static float getCurrentPrice(String cryptoSymbol) throws Exception {
+        String response = fetchTickers();
+        Gson gson = new Gson();
+        JsonArray jsonArray = gson.fromJson(response, JsonArray.class);
 
-            for (Object obj : jsonArray) {
-                JSONObject ticker = (JSONObject) obj;
-                String symbol = (String) ticker.get("symbol");
-                Double price24h = (Double) ticker.get("price_24h");
-                Double lastTradePrice = (Double) ticker.get("last_trade_price");
+        for (JsonElement element : jsonArray) {
+            JsonObject ticker = element.getAsJsonObject();
+            String symbol = ticker.get("symbol").getAsString();
 
-                System.out.printf("Symbol: %s | 24h Price: %.2f | Last Trade Price: %.2f%n", symbol, price24h, lastTradePrice);
+            if (symbol.equals(cryptoSymbol)) {
+                return ticker.get("last_trade_price").getAsFloat();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+
+        throw new Exception("Symbol not found: " + cryptoSymbol);
+    }
+
+    /**
+     * Fetches information about popular cryptocurrencies.
+     *
+     * @return a List of CryptoInfo objects containing cryptocurrency details.
+     * @throws Exception if an error occurs during the API call or data parsing.
+     */
+    public static List<CryptoInfo> fetchPopularCryptos() throws Exception {
+        String response = fetchTickers();
+        Gson gson = new Gson();
+        JsonArray jsonArray = gson.fromJson(response, JsonArray.class);
+
+        List<CryptoInfo> cryptoList = new ArrayList<>();
+
+        for (JsonElement element : jsonArray) {
+            JsonObject ticker = element.getAsJsonObject();
+            String symbol = ticker.get("symbol").getAsString();
+            float lastTradePrice = ticker.get("last_trade_price").getAsFloat();
+            float price24h = ticker.has("price_24h") ? ticker.get("price_24h").getAsFloat() : lastTradePrice;
+            float percentageChange = ((lastTradePrice - price24h) / price24h) * 100;
+
+            // Add popular crypto symbols only (e.g., BTC, ETH, LTC)
+            if (symbol.endsWith("-USD")) { // Filter USD trading pairs
+                cryptoList.add(new CryptoInfo(
+                        symbol.replace("-USD", ""), // Name (e.g., BTC)
+                        symbol, // Symbol (e.g., BTC-USD)
+                        lastTradePrice, // Current price
+                        percentageChange // 24-hour percentage change
+                ));
+            }
+        }
+
+        return cryptoList;
+    }
+
+    // Class to hold cryptocurrency information
+    public static class CryptoInfo {
+        private final String name;
+        private final String symbol;
+        private final float currentPrice;
+        private final float percentageChange;
+
+        public CryptoInfo(String name, String symbol, float currentPrice, float percentageChange) {
+            this.name = name;
+            this.symbol = symbol;
+            this.currentPrice = currentPrice;
+            this.percentageChange = percentageChange;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+
+        public float getCurrentPrice() {
+            return currentPrice;
+        }
+
+        public float getPercentageChange() {
+            return percentageChange;
         }
     }
 }
