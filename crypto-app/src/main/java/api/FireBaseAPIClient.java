@@ -5,20 +5,32 @@ import com.google.gson.JsonParser;
 import entities.PortfolioEntry;
 import entities.Transaction;
 import okhttp3.*;
-import java.math.BigDecimal;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.io.IOException;
 
+/**
+ * A client for interacting with Firebase Realtime Database and Firebase Authentication APIs.
+ * Provides methods for user registration, login, and managing user financial portfolios.
+ */
 public class FireBaseAPIClient {
 
-    private static final String API_KEY = "AIzaSyBZ_meIO9GRHaLjHfq3B5WZs0v--HB1wrQ";
-    private static final String DATABASE_URL = "https://dogedemo-83ba8-default-rtdb.firebaseio.com/";
-    private static final OkHttpClient client = new OkHttpClient();
+    private static final String API_KEY = "AIzaSyBZ_meIO9GRHaLjHfq3B5WZs0v--HB1wrQ"; // Firebase API key
+    private static final String DATABASE_URL = "https://dogedemo-83ba8-default-rtdb.firebaseio.com/"; // Firebase DB URL
+    private static final OkHttpClient client = new OkHttpClient(); // HTTP client for making requests
 
     // User registration
+
+    /**
+     * Registers a new user with email and password.
+     *
+     * @param email    User's email address.
+     * @param password User's chosen password.
+     * @return The user's unique ID (localId) from Firebase.
+     * @throws IOException if the registration fails or the server returns an error.
+     */
     public static String registerUser(String email, String password) throws IOException {
         JsonObject requestBody = new JsonObject();
         requestBody.addProperty("email", email);
@@ -38,7 +50,7 @@ public class FireBaseAPIClient {
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 JsonObject jsonResponse = JsonParser.parseString(response.body().string()).getAsJsonObject();
-                return jsonResponse.get("localId").getAsString(); // User ID
+                return jsonResponse.get("localId").getAsString();
             } else {
                 throw new IOException("Error registering user: " + response.body().string());
             }
@@ -46,6 +58,15 @@ public class FireBaseAPIClient {
     }
 
     // User login
+
+    /**
+     * Logs in a user using email and password.
+     *
+     * @param email    User's email address.
+     * @param password User's password.
+     * @return The user's unique ID (localId) from Firebase.
+     * @throws IOException if the login fails or the server returns an error.
+     */
     public static String loginUser(String email, String password) throws IOException {
         JsonObject requestBody = new JsonObject();
         requestBody.addProperty("email", email);
@@ -65,7 +86,7 @@ public class FireBaseAPIClient {
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 JsonObject jsonResponse = JsonParser.parseString(response.body().string()).getAsJsonObject();
-                return jsonResponse.get("localId").getAsString(); // User ID
+                return jsonResponse.get("localId").getAsString();
             } else {
                 throw new IOException("Error logging in: " + response.body().string());
             }
@@ -73,12 +94,29 @@ public class FireBaseAPIClient {
     }
 
     // Add cash
+
+    /**
+     * Adds cash to a user's account.
+     *
+     * @param userId User's unique ID.
+     * @param amount The amount to add.
+     * @throws IOException if the operation fails.
+     */
     public static void addCash(String userId, double amount) throws IOException {
         double currentBalance = getCashReserves(userId);
         updateCashReserves(userId, currentBalance + amount);
     }
 
     // Withdraw cash
+
+    /**
+     * Withdraws cash from a user's account.
+     *
+     * @param userId User's unique ID.
+     * @param amount The amount to withdraw.
+     * @throws IOException              if the operation fails.
+     * @throws IllegalArgumentException if insufficient funds are available.
+     */
     public static void withdrawCash(String userId, double amount) throws IOException {
         double currentBalance = getCashReserves(userId);
         if (currentBalance < amount) {
@@ -88,6 +126,14 @@ public class FireBaseAPIClient {
     }
 
     // Get cash reserves
+
+    /**
+     * Retrieves a user's cash reserves.
+     *
+     * @param userId User's unique ID.
+     * @return The current cash reserves.
+     * @throws IOException if the operation fails.
+     */
     public static double getCashReserves(String userId) throws IOException {
         Request request = new Request.Builder()
                 .url(DATABASE_URL + "users/" + userId + "/cashReserves.json")
@@ -101,7 +147,6 @@ public class FireBaseAPIClient {
                     return 0.0;
                 }
 
-                // Parse the JSON response
                 JsonObject jsonResponse = JsonParser.parseString(responseBody).getAsJsonObject();
                 return jsonResponse.get("cashReserves").getAsDouble();
             } else {
@@ -111,6 +156,14 @@ public class FireBaseAPIClient {
     }
 
     // Update cash reserves
+
+    /**
+     * Updates a user's cash reserves in the database.
+     *
+     * @param userId      User's unique ID.
+     * @param newBalance  The new cash reserve balance.
+     * @throws IOException if the operation fails.
+     */
     private static void updateCashReserves(String userId, double newBalance) throws IOException {
         JsonObject cashData = new JsonObject();
         cashData.addProperty("cashReserves", newBalance);
@@ -132,20 +185,26 @@ public class FireBaseAPIClient {
         }
     }
 
+    // Transaction and portfolio management
 
-
+    /**
+     * Handles a transaction and updates the portfolio and cash reserves accordingly.
+     *
+     * @param userId      User's unique ID.
+     * @param transaction The transaction to be executed.
+     * @throws IOException if the operation fails.
+     */
     public static void addTransactionAndUpdatePortfolio(String userId, Transaction transaction) throws IOException {
-        // Fetch current cash reserves
         BigDecimal cashReserves = BigDecimal.valueOf(getCashReserves(userId));
         Map<String, PortfolioEntry> portfolio = getPortfolio(userId);
 
         if (transaction.getType().equalsIgnoreCase("BUY")) {
             BigDecimal totalCost = BigDecimal.valueOf(transaction.getAmount())
-                    .multiply(BigDecimal.valueOf(transaction.getPrice())); // Total cost = amount * price
+                    .multiply(BigDecimal.valueOf(transaction.getPrice()));
             if (cashReserves.compareTo(totalCost) < 0) {
                 throw new IllegalArgumentException("Insufficient cash reserves to complete the transaction.");
             }
-            cashReserves = cashReserves.subtract(totalCost); // Deduct total cost
+            cashReserves = cashReserves.subtract(totalCost);
         } else if (transaction.getType().equalsIgnoreCase("SELL")) {
             PortfolioEntry entry = portfolio.getOrDefault(transaction.getCryptoName(),
                     new PortfolioEntry(transaction.getCryptoName(), 0));
@@ -153,45 +212,22 @@ public class FireBaseAPIClient {
                 throw new IllegalArgumentException("Insufficient holdings to sell " + transaction.getCryptoName());
             }
             BigDecimal totalRevenue = BigDecimal.valueOf(transaction.getAmount())
-                    .multiply(BigDecimal.valueOf(transaction.getPrice())); // Total revenue = amount * price
-            cashReserves = cashReserves.add(totalRevenue); // Add total revenue
+                    .multiply(BigDecimal.valueOf(transaction.getPrice()));
+            cashReserves = cashReserves.add(totalRevenue);
         }
 
-        // Update portfolio and Firebase
         updatePortfolio(userId, transaction);
-        updateCashReserves(userId, cashReserves.doubleValue()); // Convert BigDecimal back to double
-
-        // Record the transaction in Firebase
+        updateCashReserves(userId, cashReserves.doubleValue());
         addTransaction(userId, transaction);
     }
 
-
-    // Add a transaction
-    private static void addTransaction(String userId, Transaction transaction) throws IOException {
-        JsonObject transactionData = new JsonObject();
-        transactionData.addProperty("cryptoName", transaction.getCryptoName());
-        transactionData.addProperty("amount", transaction.getAmount());
-        transactionData.addProperty("price", transaction.getPrice());
-        transactionData.addProperty("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(transaction.getDate()));
-        transactionData.addProperty("type", transaction.getType());
-
-        RequestBody body = RequestBody.create(
-                transactionData.toString(),
-                MediaType.get("application/json; charset=utf-8")
-        );
-
-        Request request = new Request.Builder()
-                .url(DATABASE_URL + "users/" + userId + "/transactions.json")
-                .post(body)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Error adding transaction: " + response.body().string());
-            }
-        }
-    }
-
+    /**
+     * Fetches all transactions for a user.
+     *
+     * @param userId User's unique ID.
+     * @return A list of Transaction objects.
+     * @throws IOException if the operation fails.
+     */
     public static List<Transaction> getTransactions(String userId) throws IOException {
         Request request = new Request.Builder()
                 .url(DATABASE_URL + "users/" + userId + "/transactions.json")
@@ -230,7 +266,13 @@ public class FireBaseAPIClient {
         }
     }
 
-    // Get full portfolio as a Map
+    /**
+     * Fetches the user's portfolio as a map.
+     *
+     * @param userId User's unique ID.
+     * @return A map of cryptocurrency names to PortfolioEntry objects.
+     * @throws IOException if the operation fails.
+     */
     public static Map<String, PortfolioEntry> getPortfolio(String userId) throws IOException {
         Request request = new Request.Builder()
                 .url(DATABASE_URL + "users/" + userId + "/portfolio.json")
@@ -245,7 +287,6 @@ public class FireBaseAPIClient {
                     return portfolio;
                 }
 
-                // Parse the JSON response
                 JsonObject jsonResponse = JsonParser.parseString(responseBody).getAsJsonObject();
                 jsonResponse.entrySet().forEach(entry -> {
                     JsonObject entryData = entry.getValue().getAsJsonObject();
@@ -261,38 +302,37 @@ public class FireBaseAPIClient {
         }
     }
 
-    // Update portfolio
+    /**
+     * Updates the user's portfolio in Firebase after a transaction.
+     *
+     * @param userId      User's unique ID.
+     * @param transaction The transaction to apply to the portfolio.
+     * @throws IOException if the operation fails.
+     */
     private static void updatePortfolio(String userId, Transaction transaction) throws IOException {
-        // Fetch the current portfolio from Firebase
         Map<String, PortfolioEntry> portfolio = getPortfolio(userId);
 
-        // Find or create a portfolio entry for the cryptocurrency
         PortfolioEntry entry = portfolio.getOrDefault(transaction.getCryptoName(), new PortfolioEntry(transaction.getCryptoName(), 0));
 
-        // Update the portfolio based on transaction type
         if (transaction.getType().equalsIgnoreCase("BUY")) {
-            entry.addAmount(transaction.getAmount()); // Add the purchased amount
-            portfolio.put(transaction.getCryptoName(), entry); // Save it back to the portfolio map
+            entry.addAmount(transaction.getAmount());
+            portfolio.put(transaction.getCryptoName(), entry);
         } else if (transaction.getType().equalsIgnoreCase("SELL")) {
-            entry.subtractAmount(transaction.getAmount()); // Subtract the sold amount
-
-            // Remove the entry if the amount reaches zero
+            entry.subtractAmount(transaction.getAmount());
             if (entry.getAmount() <= 0) {
                 portfolio.remove(transaction.getCryptoName());
             } else {
-                portfolio.put(transaction.getCryptoName(), entry); // Update the portfolio map
+                portfolio.put(transaction.getCryptoName(), entry);
             }
         }
 
-        // Prepare the JSON payload for Firebase
         JsonObject portfolioData = new JsonObject();
         for (Map.Entry<String, PortfolioEntry> portfolioEntry : portfolio.entrySet()) {
             JsonObject entryData = new JsonObject();
             entryData.addProperty("amount", portfolioEntry.getValue().getAmount());
-            portfolioData.add(portfolioEntry.getKey(), entryData); // Add each cryptocurrency entry
+            portfolioData.add(portfolioEntry.getKey(), entryData);
         }
 
-        // Send the updated portfolio data to Firebase
         RequestBody body = RequestBody.create(
                 portfolioData.toString(),
                 MediaType.get("application/json; charset=utf-8")
@@ -303,7 +343,6 @@ public class FireBaseAPIClient {
                 .put(body)
                 .build();
 
-        // Execute the request and check for errors
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new IOException("Error updating portfolio in Firebase: " + response.body().string());
@@ -311,17 +350,60 @@ public class FireBaseAPIClient {
         }
     }
 
-
+    /**
+     * Fetches a user's portfolio entries as a list.
+     *
+     * @param userId User's unique ID.
+     * @return A list of PortfolioEntry objects.
+     * @throws IOException if the operation fails.
+     */
     public static List<PortfolioEntry> getPortfolioEntries(String userId) throws IOException {
-        Map<String, PortfolioEntry> portfolio = getPortfolio(userId); // Use existing `getPortfolio` method
-        return new ArrayList<>(portfolio.values()); // Convert the portfolio map to a list
+        Map<String, PortfolioEntry> portfolio = getPortfolio(userId);
+        return new ArrayList<>(portfolio.values());
     }
 
+    /**
+     * Fetches a single portfolio entry for a specific cryptocurrency.
+     *
+     * @param userId     User's unique ID.
+     * @param cryptoName The name of the cryptocurrency.
+     * @return A PortfolioEntry object for the given cryptocurrency.
+     * @throws IOException if the operation fails.
+     */
     public static PortfolioEntry getPortfolioEntry(String userId, String cryptoName) throws IOException {
-        Map<String, PortfolioEntry> portfolio = getPortfolio(userId); // Use existing `getPortfolio` method
-        return portfolio.getOrDefault(cryptoName, new PortfolioEntry(cryptoName, 0)); // Return the entry or a default one
+        Map<String, PortfolioEntry> portfolio = getPortfolio(userId);
+        return portfolio.getOrDefault(cryptoName, new PortfolioEntry(cryptoName, 0));
     }
 
+    /**
+     * Adds a new transaction to Firebase.
+     *
+     * @param userId      User's unique ID.
+     * @param transaction The transaction to record.
+     * @throws IOException if the operation fails.
+     */
+    private static void addTransaction(String userId, Transaction transaction) throws IOException {
+        JsonObject transactionData = new JsonObject();
+        transactionData.addProperty("cryptoName", transaction.getCryptoName());
+        transactionData.addProperty("amount", transaction.getAmount());
+        transactionData.addProperty("price", transaction.getPrice());
+        transactionData.addProperty("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(transaction.getDate()));
+        transactionData.addProperty("type", transaction.getType());
 
+        RequestBody body = RequestBody.create(
+                transactionData.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
 
+        Request request = new Request.Builder()
+                .url(DATABASE_URL + "users/" + userId + "/transactions.json")
+                .post(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Error adding transaction: " + response.body().string());
+            }
+        }
+    }
 }
