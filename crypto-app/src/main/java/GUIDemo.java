@@ -10,10 +10,15 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * A GUI demo for the Crypto Portfolio Management System.
+ * Allows users to log in, manage their portfolio, and view real-time updates of portfolio values.
+ */
 public class GUIDemo extends JFrame {
 
     private User currentUser;
     private JLabel cashReservesLabel;
+    private JLabel totalPortfolioValueLabel;
     private JPanel portfolioPanel;
     private JPanel transactionsPanel;
     private JPanel cryptoPricesPanel;
@@ -84,13 +89,15 @@ public class GUIDemo extends JFrame {
     private void showMainScreen() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Header Panel with cash reserves
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Header Panel with cash reserves and portfolio value
+        JPanel headerPanel = new JPanel(new GridLayout(2, 1));
         cashReservesLabel = new JLabel("Cash Reserves: Loading...");
-        JButton refreshCashButton = new JButton("Refresh Cash");
-        refreshCashButton.addActionListener(e -> updateCashReserves());
+        totalPortfolioValueLabel = new JLabel("Total Portfolio Value: Loading...");
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(e -> updatePortfolioValue());
         headerPanel.add(cashReservesLabel);
-        headerPanel.add(refreshCashButton);
+        headerPanel.add(totalPortfolioValueLabel);
+        headerPanel.add(refreshButton);
 
         // Center Panel with tabs for portfolio, transactions, and crypto prices
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -136,20 +143,23 @@ public class GUIDemo extends JFrame {
         repaint();
 
         // Load data
-        updateCashReserves();
+        updatePortfolioValue();
         loadPortfolio();
         loadTransactions();
         loadCryptoPrices();
         startPriceUpdates();
     }
 
-    private void updateCashReserves() {
+    private void updatePortfolioValue() {
         SwingUtilities.invokeLater(() -> {
             try {
                 double cashBalance = currentUser.getCashBalance();
+                double portfolioValue = currentUser.calculatePortfolioValue();
                 cashReservesLabel.setText(String.format("Cash Reserves: $%.2f", cashBalance));
+                totalPortfolioValueLabel.setText(String.format("Total Portfolio Value: $%.2f", portfolioValue));
             } catch (Exception e) {
                 cashReservesLabel.setText("Error fetching cash reserves.");
+                totalPortfolioValueLabel.setText("Error calculating portfolio value.");
             }
         });
     }
@@ -225,7 +235,7 @@ public class GUIDemo extends JFrame {
         if (amountStr != null) {
             try {
                 currentUser.depositCash(Double.parseDouble(amountStr));
-                updateCashReserves();
+                updatePortfolioValue();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error: Unable to deposit cash.");
             }
@@ -239,7 +249,7 @@ public class GUIDemo extends JFrame {
             if (amountStr != null) {
                 try {
                     currentUser.buyCrypto(cryptoName, Double.parseDouble(amountStr));
-                    updateCashReserves();
+                    updatePortfolioValue();
                     loadPortfolio();
                     loadTransactions();
                 } catch (Exception e) {
@@ -256,7 +266,7 @@ public class GUIDemo extends JFrame {
             if (amountStr != null) {
                 try {
                     currentUser.sellCrypto(cryptoName, Double.parseDouble(amountStr));
-                    updateCashReserves();
+                    updatePortfolioValue();
                     loadPortfolio();
                     loadTransactions();
                 } catch (Exception e) {
