@@ -1,23 +1,51 @@
-# NovaStar Crypto Converter
+# NovaStar Cryptocurrency Trading Platform
 
-NovaStar Crypto Converter is a comprehensive application that allows users to convert specified cryptocurrencies to various fiat currencies. The app provides real-time conversion rates, access to historical data, and personalized advice based on current market conditions.
+### Authors
+- **Emanuel Luis Platon Decena**: 
+- **Minh Khoa Doan**: 
+- **Astrid Xin Yin Hu**: 
+- **Felix Jinyang Wu**: 
+- **Yinzhen Zhai**: 
+- **Alerts and Notifications**: 
+
+## Summary
+Cryptocurrency Trading Platform is an intuitive, robust solution designed to simplify cryptocurrency trading for 
+beginners. The platform allows users to buy, sell, and trade a wide range of cryptocurrencies in a secure, real-time 
+environment. Built with speed, security, and simplicity in mind, it addresses the challenges of complex, inefficient, 
+or high-fee trading systems.
+
+This project aims to provide a reliable, user-friendly interface that makes managing cryptocurrency assets and executing
+trades straightforward. It’s ideal for individuals who want to engage in cryptocurrency trading without the complexities 
+associated with traditional platforms.
+
+## Table of Contents
+- [Features](#Features)
+- [Installation Instructions](#Installation Instructions)
+- [Usage Guide](#Usage Guide)
+- [License](#License)
+- [Feedback](#Feedback)
+- [Contributions](#Contributions)
 
 ## Features
+- **Real-time Conversion Rates**: Access real-time conversion rates for various cryptocurrencies with up-to-the-minute 
+market data.
+- **Historical Data Access**: View historical transaction data to analyze past performance and make informed decisions 
+about future trades.
+- **Multi-cryptocurrency Support**: Trade multiple cryptocurrencies, including Bitcoin, Ethereum, and Dogecoin, 
+using USD as the primary fiat currency.
+- **Educational Resources**:
+- 
 
-- **Real-time Conversion Rates**: Get up-to-the-minute rates for a variety of cryptocurrencies.
-- **Historical Data Access**: Review past performance to inform future transactions.
-- **Personalized Advice**: Receive suggestions tailored to your investment goals.
-- **Multi-currency Support**: Supports multiple fiat currencies for easy comparisons.
-- **Secure Accounts**: Two-factor authentication to ensure account security.
-- **Alerts and Notifications**: Set up alerts to be notified about favorable conversion rates.
+## Installation Instructions
+Modules: openjdk-23 (
 
-## Getting Started
-
+## Usage Guide
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
-
-What things you need to install the software and how to install them:
+## License
+## Prerequisites
+## Feedback
+## Contributions
 
 ```bash
 Java 11 or higher
