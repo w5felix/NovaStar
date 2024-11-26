@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
 public class MainView extends JFrame implements PropertyChangeListener {
 
     private CardLayout cardLayout;
-
     private JPanel views;
 
 
