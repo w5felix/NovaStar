@@ -1,5 +1,6 @@
 package views;
 
+import entities.User;
 import interface_adapterss.ViewModel;
 
 import javax.swing.*;
@@ -13,8 +14,6 @@ public class SignUpView extends JPanel {
     private JTextField emailField = new JTextField();
 
     private JPasswordField passwordField = new JPasswordField();
-
-    private JTextField usernameField = new JTextField();
 
     private JComboBox<String> verifyQuestionBox;
 
@@ -55,7 +54,27 @@ public class SignUpView extends JPanel {
         add(signUpButton);
 
         signUpButton.addActionListener(e -> {
+            User user = handleRegister(nameField.getName(), emailField.getText(), passwordField.getName(),
+                    verifyQuestionBox.getSelectedItem().toString(), answerField.getText());
+            nameField.setText("");
+            emailField.setText("");
+            passwordField.setText("");
+            verifyQuestionBox.setSelectedIndex(0);
+            answerField.setText("");
             this.viewmodel.setCurrentState(ViewModel.LOGIN_VIEW);
         });
+    }
+
+    private User handleRegister(String username,String email, String password, String securityQuestion,
+                                String questionAnswer) {
+        try {
+            String userId = api.FireBaseAPIClient.registerUser(username, email,
+                    password, securityQuestion, questionAnswer);
+            System.out.println("Registration successful! Your User ID: " + userId);
+            return new User(userId, username);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return null;
     }
 }
