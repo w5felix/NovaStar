@@ -1,5 +1,7 @@
 package interface_adapterss;
 
+import entities.User;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -21,6 +23,8 @@ public class ViewModel {
 
     private String currentState;
 
+    private User currentUser;
+
     private String username;
 
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
@@ -29,12 +33,21 @@ public class ViewModel {
         this.currentState = LOGIN_VIEW;
     }
 
+    public String getCurrentUsername() {
+        return currentUser.getName();
+    }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
-        String oldUsername = this.username;
+        this.username = username;
     }
 
     public void setCurrentState(String state) {

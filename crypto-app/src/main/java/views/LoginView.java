@@ -1,5 +1,6 @@
 package views;
 
+import entities.User;
 import interface_adapterss.ViewModel;
 
 import javax.swing.*;
@@ -83,6 +84,8 @@ public class LoginView extends JPanel {
             try{
                 api.FireBaseAPIClient.checkUserByUsernameOrEmail(nameField.getText());
                 api.FireBaseAPIClient.checkPasswordByUsernameOrEmail(passwordField.getPassword(),nameField.getText());
+                User user = api.FireBaseAPIClient.getExistedUserFromUsernameOrEmail(nameField.getText());
+                viewModel.setCurrentUser(user);
                 this.viewModel.setCurrentState(ViewModel.AFTER_LOGIN_VIEW);
                 nameField.setText("");
                 passwordField.setText("");

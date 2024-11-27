@@ -492,4 +492,7 @@ public class FireBaseAPIClient {
     public static void checkPasswordByUsernameOrEmail(char[] password, String text) {
 
     }
+
+    public static User getExistedUserFromUsernameOrEmail(String text) {
+    return null;}
 }

@@ -56,6 +56,7 @@ public class SignUpView extends JPanel {
         signUpButton.addActionListener(e -> {
             User user = handleRegister(nameField.getName(), emailField.getText(), passwordField.getName(),
                     verifyQuestionBox.getSelectedItem().toString(), answerField.getText());
+            viewmodel.setCurrentUser(user);
             nameField.setText("");
             emailField.setText("");
             passwordField.setText("");
@@ -68,10 +69,11 @@ public class SignUpView extends JPanel {
     private User handleRegister(String username,String email, String password, String securityQuestion,
                                 String questionAnswer) {
         try {
-            String userId = api.FireBaseAPIClient.registerUser(username, email,
-                    password, securityQuestion, questionAnswer);
-            System.out.println("Registration successful! Your User ID: " + userId);
-            return new User(userId, username);
+            User new_user = new User(username, email, password, securityQuestion, questionAnswer);
+/*            String userId = api.FireBaseAPIClient.registerUser(username, email,
+                    password, securityQuestion, questionAnswer);*/
+            System.out.println("Registration successful! Your User ID: " + new_user.getUserId());
+            return new_user;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
