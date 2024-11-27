@@ -59,10 +59,70 @@ public class FireBaseAPIClient {
         }
     }
 
+    /**
+     * Registers a new user with additional details: username, security question, and answer.
+     *
+     * @param username             User's username.
+     * @param email                User's email address.
+     * @param password             User's chosen password.
+     * @param securityQuestion     User's security question for account recovery.
+     * @param securityQuestionAnswer User's answer to the security question.
+     * @return The user's unique ID (localId) from Firebase.
+     * @throws IOException if the registration fails or the server returns an error.
+     */
     public static String registerUser(String username, String email, String password, String securityQuestion,
-                                      String questionAnswer) throws IOException {
-        return "";
+                                      String securityQuestionAnswer) throws IOException {
+        // Step 1: Register the user with Firebase Authentication
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("email", email);
+        requestBody.addProperty("password", password);
+        requestBody.addProperty("returnSecureToken", true);
+
+        RequestBody body = RequestBody.create(
+                requestBody.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + API_KEY)
+                .post(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                JsonObject jsonResponse = JsonParser.parseString(response.body().string()).getAsJsonObject();
+                String userId = jsonResponse.get("localId").getAsString();
+
+                // Step 2: Store additional details in Firebase Realtime Database
+                JsonObject userDetails = new JsonObject();
+                userDetails.addProperty("username", username);
+                userDetails.addProperty("email", email);
+                userDetails.addProperty("securityQuestion", securityQuestion);
+                userDetails.addProperty("securityQuestionAnswer", securityQuestionAnswer);
+
+                RequestBody userDetailsBody = RequestBody.create(
+                        userDetails.toString(),
+                        MediaType.get("application/json; charset=utf-8")
+                );
+
+                Request updateRequest = new Request.Builder()
+                        .url(DATABASE_URL + "users/" + userId + ".json")
+                        .put(userDetailsBody)
+                        .build();
+
+                try (Response updateResponse = client.newCall(updateRequest).execute()) {
+                    if (!updateResponse.isSuccessful()) {
+                        throw new IOException("Error updating user details: " + updateResponse.body().string());
+                    }
+                }
+
+                return userId;
+            } else {
+                throw new IOException("Error registering user: " + response.body().string());
+            }
+        }
     }
+
 
 
 

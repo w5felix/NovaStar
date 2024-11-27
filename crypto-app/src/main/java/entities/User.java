@@ -21,19 +21,43 @@ public class User {
     private List<PortfolioEntry> portfolio; // Portfolio holdings
 
     /**
-     * Constructor to initialize a user object by fetching data from Firebase.
+     * Constructor to initialize a user object using email and password.
      *
-     * @param userId The unique ID of the user.
-     * @param name   The name of the user.
-     * @throws IOException if there's an error fetching user data from Firebase.
+     * @param email    The user's email.
+     * @param password The user's password.
+     * @throws IOException if there's an error logging in or fetching user data from Firebase.
      */
-    public User(String userId, String name) throws IOException {
-        this.userId = userId;
-        this.name = name;
+    public User(String email, String password) throws IOException {
+        // Authenticate the user with Firebase
+        this.userId = FireBaseAPIClient.loginUser(email, password);
+        // Fetch user details (name, cash reserves, transactions, and portfolio) from Firebase
+        this.name = email; // Defaulting name to email if no separate name is stored
         this.cashBalance = FireBaseAPIClient.getCashReserves(userId); // Fetch initial balance from Firebase
         this.transactions = FireBaseAPIClient.getTransactions(userId); // Fetch transactions from Firebase
         this.portfolio = FireBaseAPIClient.getPortfolioEntries(userId); // Fetch portfolio from Firebase
     }
+
+    /**
+     * Constructor to register and initialize a user object.
+     *
+     * @param username             The user's username.
+     * @param email                The user's email address.
+     * @param password             The user's chosen password.
+     * @param securityQuestion     The user's security question for recovery.
+     * @param securityQuestionAnswer The user's answer to the security question.
+     * @throws IOException if there's an error during registration or fetching data from Firebase.
+     */
+    public User(String username, String email, String password, String securityQuestion, String securityQuestionAnswer) throws IOException {
+        // Step 1: Register the user and get the unique ID
+        this.userId = FireBaseAPIClient.registerUser(username, email, password, securityQuestion, securityQuestionAnswer);
+        this.name = username;
+
+        // Step 2: Initialize the rest of the user's details
+        this.cashBalance = FireBaseAPIClient.getCashReserves(userId); // Initialize with 0.0 or the default value
+        this.transactions = FireBaseAPIClient.getTransactions(userId); // Fetch an empty transaction history initially
+        this.portfolio = FireBaseAPIClient.getPortfolioEntries(userId); // Fetch an empty portfolio initially
+    }
+
 
     /**
      * Buys a specified amount of cryptocurrency.

@@ -69,8 +69,9 @@ public class GUIDemo extends JFrame {
 
     private void handleRegister(String email, String password, JLabel statusLabel) {
         try {
-            String userId = api.FireBaseAPIClient.registerUser(email, password);
-            statusLabel.setText("Registration successful! Your User ID: " + userId);
+            this.currentUser = new User("tester", email, password, "1+1=", "2");
+            showMainScreen();
+
         } catch (Exception e) {
             statusLabel.setText("Error: " + e.getMessage());
         }
@@ -78,8 +79,7 @@ public class GUIDemo extends JFrame {
 
     private void handleLogin(String email, String password, JLabel statusLabel) {
         try {
-            String userId = api.FireBaseAPIClient.loginUser(email, password);
-            this.currentUser = new User(userId, "User");
+            this.currentUser = new User(email, password);
             showMainScreen();
         } catch (Exception e) {
             statusLabel.setText("Error: " + e.getMessage());
