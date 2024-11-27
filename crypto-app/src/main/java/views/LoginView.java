@@ -80,15 +80,29 @@ public class LoginView extends JPanel {
         add(panel_3, gbc);
 
         loginButton.addActionListener(e -> {
-            this.viewModel.setCurrentState(ViewModel.AFTER_LOGIN_VIEW);
+            try{
+                api.FireBaseAPIClient.checkUserByUsernameOrEmail(nameField.getText());
+                api.FireBaseAPIClient.checkPasswordByUsernameOrEmail(passwordField.getPassword(),nameField.getText());
+                this.viewModel.setCurrentState(ViewModel.AFTER_LOGIN_VIEW);
+                nameField.setText("");
+                passwordField.setText("");
+            } catch (Exception ex) {
+                System.out.println("Username or password is incorrect, please try again");
+                nameField.setText("");
+                passwordField.setText("");
+            }
         });
 
         createAnAccount.addActionListener(e -> {
             this.viewModel.setCurrentState(ViewModel.SIGNUP_VIEW);
+            nameField.setText("");
+            passwordField.setText("");
         });
 
         reset.addActionListener(e -> {
             this.viewModel.setCurrentState(ViewModel.FORGET_PASSWORD_VIEW);
+            nameField.setText("");
+            passwordField.setText("");
         });
 
     }

@@ -7,21 +7,22 @@ import javax.swing.*;
 public class ForgetPasswordView extends JPanel{
     private final ViewModel viewmodel;
 
-    private JButton resetButton = new JButton("Reset");
+    private JButton verifyButton = new JButton("verify");
 
     private JPasswordField answerField = new JPasswordField();
 
     private JTextField verifyQuestion = new JTextField();
+
+    private JTextField resetText = new JTextField();
 
     public ForgetPasswordView(ViewModel viewmodel) {
         this.viewmodel = viewmodel;
 
         setLayout(new BoxLayout(ForgetPasswordView.this, BoxLayout.Y_AXIS));
 
-        JLabel reset = new JLabel("enter your password or email when you create");
+        JLabel reset = new JLabel("enter your username or email when you create");
         add(reset);
 
-        JTextField resetText = new JTextField();
         add(resetText);
 
         JLabel verifyQuestionLabel = new JLabel("verify question:");
@@ -34,11 +35,24 @@ public class ForgetPasswordView extends JPanel{
 
         add(answerField);
 
-        add(resetButton);
+        add(verifyButton);
 
-        resetButton.addActionListener(e -> {
-            this.viewmodel.setCurrentState(ViewModel.LOGIN_VIEW);
+        verifyButton.addActionListener(e -> {
+            try{
+                api.FireBaseAPIClient.checkUserByUsernameOrEmail(resetText.getText());
+                api.FireBaseAPIClient.checkSecurityQuestionMatchingUserInformation(resetText, verifyQuestion.getText());
+                api.FireBaseAPIClient.checkAnswerMatchingSecurityQuestion(verifyQuestion.getText(),answerLabel.getText());
+                this.viewmodel.setUsername(resetText.getText());
+                this.viewmodel.setCurrentState(ViewModel.RESET_VIEW);
+                answerField.setText("");
+                verifyQuestion.setText("");
+                resetText.setText("");
+            }catch (Exception ex) {
+                System.out.println("Error:verify failed, please try again");
+                answerField.setText("");
+                verifyQuestion.setText("");
+                resetText.setText("");
+            }
         });
-
     }
 }

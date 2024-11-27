@@ -13,16 +13,28 @@ public class ViewModel {
 
     public static final String FORGET_PASSWORD_VIEW = "forgetPasswordView";
 
+    public static final String RESET_VIEW = "resetView";
+
     public static final String AFTER_LOGIN_VIEW = "afterLogin";
 
     public static final String TRANSACTION_VIEW = "transaction";
 
     private String currentState;
 
+    private String username;
+
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public ViewModel() {
         this.currentState = LOGIN_VIEW;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        String oldUsername = this.username;
     }
 
     public void setCurrentState(String state) {
