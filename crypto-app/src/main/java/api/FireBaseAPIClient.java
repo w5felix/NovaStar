@@ -4,8 +4,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entities.PortfolioEntry;
 import entities.Transaction;
+import entities.User;
 import okhttp3.*;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,6 +58,13 @@ public class FireBaseAPIClient {
             }
         }
     }
+
+    public static String registerUser(String username, String email, String password, String securityQuestion,
+                                      String questionAnswer) throws IOException {
+        return "";
+    }
+
+
 
     // User login
 
@@ -405,5 +414,22 @@ public class FireBaseAPIClient {
                 throw new IOException("Error adding transaction: " + response.body().string());
             }
         }
+    }
+
+    public static void checkUserByUsernameOrEmail(String text) {
+
+    }
+
+    public static void checkSecurityQuestionMatchingUserInformation(JTextField resetText, String text) {
+    }
+
+    public static void checkAnswerMatchingSecurityQuestion(String text, String text1) {
+    }
+
+    public static void changePasswordByUsernameOrEmail(String username) {
+    }
+
+    public static void checkPasswordByUsernameOrEmail(char[] password, String text) {
+
     }
 }
