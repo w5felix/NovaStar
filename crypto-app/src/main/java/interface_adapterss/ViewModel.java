@@ -37,6 +37,10 @@ public class ViewModel {
         return currentUser.getName();
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     public void setCurrentUser(User user) {
         this.currentUser = user;
 
