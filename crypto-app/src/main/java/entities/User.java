@@ -227,4 +227,32 @@ public class User {
         refreshPortfolio();
         return portfolio;
     }
+
+    /**
+     * Adds a new alert for the user.
+     *
+     * @param cryptoName  The name of the cryptocurrency.
+     * @param targetPrice The target price for the alert.
+     * @param isAbove     True if the alert triggers when price exceeds target.
+     * @throws IOException If there is an issue saving the alert in Firebase.
+     */
+    public void addAlert(String cryptoName, double targetPrice, boolean isAbove) throws IOException {
+        // Create a new alert with the current user's userId
+        Alert alert = new Alert(this.userId, cryptoName, targetPrice, isAbove);
+
+        // Pass userId explicitly to saveAlert
+        FireBaseAPIClient.saveAlert(this.userId, alert);
+    }
+
+    /**
+     * Fetches all alerts for the user.
+     *
+     * @return A list of alerts.
+     * @throws IOException If there is an issue fetching alerts from Firebase.
+     */
+    public List<Alert> getAlerts() throws IOException {
+        // Fetch all alerts for the current user using userId
+        return FireBaseAPIClient.getUserAlerts(this.userId);
+    }
 }
+
