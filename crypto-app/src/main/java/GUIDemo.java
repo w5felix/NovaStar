@@ -36,14 +36,20 @@ public class GUIDemo extends JFrame {
     }
 
     public GUIDemo() {
-        // Initialize the user service and frame setup
-        this.userService = new UserService(new api.FireBaseAPIClient(), new api.BlockChainAPIClient());
+        // Initialize the user service with the adapters
+        this.userService = new UserService(
+                new adapters.FirebaseServiceAdapter(), // Pass the FirebaseServiceAdapter
+                new adapters.BlockchainServiceAdapter() // Pass the BlockchainServiceAdapter
+        );
+
+        // Frame setup
         setTitle("NovaStar Cryptocurrency Trading Platform\n");
         setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         showLoginScreen();
     }
+
 
     // Method to search for news articles based on the user's query
     private void searchNews() {

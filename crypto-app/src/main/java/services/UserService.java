@@ -1,33 +1,33 @@
 package services;
 
-import api.BlockChainAPIClient;
-import api.FireBaseAPIClient;
 import entities.PortfolioEntry;
 import entities.Transaction;
 import entities.User;
+import interfaces.CryptoApi;
+import interfaces.UserApi;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Service class for handling all user-related business logic and operations.
- * Interacts with FireBaseAPIClient and BlockChainAPIClient for backend operations.
+ * Service class for handling user-related business logic and operations.
+ * Interacts with CryptoApi and UserApi interfaces for backend operations.
  */
 public class UserService {
 
-    private final FireBaseAPIClient firebaseClient;
-    private final BlockChainAPIClient cryptoClient;
+    private final UserApi userApi;
+    private final CryptoApi cryptoApi;
 
     /**
-     * Constructor for initializing the service with required API clients.
+     * Constructor for UserService.
      *
-     * @param firebaseClient The Firebase API client.
-     * @param cryptoClient   The Blockchain API client.
+     * @param userApi   The UserApi implementation for user management operations.
+     * @param cryptoApi The CryptoApi implementation for cryptocurrency operations.
      */
-    public UserService(FireBaseAPIClient firebaseClient, BlockChainAPIClient cryptoClient) {
-        this.firebaseClient = firebaseClient;
-        this.cryptoClient = cryptoClient;
+    public UserService(UserApi userApi, CryptoApi cryptoApi) {
+        this.userApi = userApi;
+        this.cryptoApi = cryptoApi;
     }
 
     /**
@@ -39,10 +39,10 @@ public class UserService {
      * @throws IOException If login fails or data retrieval encounters an issue.
      */
     public User loginUser(String email, String password) throws IOException {
-        String userId = firebaseClient.loginUser(email, password);
-        double cashBalance = firebaseClient.getCashReserves(userId);
-        List<Transaction> transactions = firebaseClient.getTransactions(userId);
-        List<PortfolioEntry> portfolio = firebaseClient.getPortfolioEntries(userId);
+        String userId = userApi.loginUser(email, password);
+        double cashBalance = userApi.getCashReserves(userId);
+        List<Transaction> transactions = userApi.getTransactions(userId);
+        List<PortfolioEntry> portfolio = userApi.getPortfolioEntries(userId);
 
         return new User(userId, email, cashBalance, transactions, portfolio);
     }
@@ -60,10 +60,10 @@ public class UserService {
      */
     public User registerUser(String username, String email, String password,
                              String securityQuestion, String securityQuestionAnswer) throws IOException {
-        String userId = firebaseClient.registerUser(username, email, password, securityQuestion, securityQuestionAnswer);
-        double cashBalance = firebaseClient.getCashReserves(userId);
-        List<Transaction> transactions = firebaseClient.getTransactions(userId);
-        List<PortfolioEntry> portfolio = firebaseClient.getPortfolioEntries(userId);
+        String userId = userApi.registerUser(username, email, password, securityQuestion, securityQuestionAnswer);
+        double cashBalance = userApi.getCashReserves(userId);
+        List<Transaction> transactions = userApi.getTransactions(userId);
+        List<PortfolioEntry> portfolio = userApi.getPortfolioEntries(userId);
 
         return new User(userId, username, cashBalance, transactions, portfolio);
     }
@@ -79,7 +79,7 @@ public class UserService {
         if (amount <= 0) {
             throw new IllegalArgumentException("Deposit amount must be positive.");
         }
-        firebaseClient.addCash(user.getUserId(), amount);
+        userApi.addCash(user.getUserId(), amount);
         user.setCashBalance(user.getCashBalance() + amount);
     }
 
@@ -98,7 +98,7 @@ public class UserService {
         if (user.getCashBalance() < amount) {
             throw new IllegalArgumentException("Insufficient balance for withdrawal.");
         }
-        firebaseClient.withdrawCash(user.getUserId(), amount);
+        userApi.withdrawCash(user.getUserId(), amount);
         user.setCashBalance(user.getCashBalance() - amount);
     }
 
@@ -111,14 +111,14 @@ public class UserService {
      * @throws Exception If the operation fails.
      */
     public void buyCrypto(User user, String cryptoName, double amount) throws Exception {
-        double price = cryptoClient.getCurrentPrice(cryptoName + "-USD");
+        double price = cryptoApi.getCurrentPrice(cryptoName + "-USD");
         double cost = amount * price;
 
         if (user.getCashBalance() < cost) {
             throw new IllegalArgumentException("Insufficient cash balance to buy " + cryptoName);
         }
 
-        firebaseClient.addTransactionAndUpdatePortfolio(user.getUserId(),
+        userApi.addTransactionAndUpdatePortfolio(user.getUserId(),
                 new Transaction(cryptoName, amount, price, new Date(), "BUY"));
 
         // Update user data
@@ -144,10 +144,10 @@ public class UserService {
             throw new IllegalArgumentException("Insufficient holdings to sell " + cryptoName);
         }
 
-        double price = cryptoClient.getCurrentPrice(cryptoName + "-USD");
+        double price = cryptoApi.getCurrentPrice(cryptoName + "-USD");
         double revenue = amount * price;
 
-        firebaseClient.addTransactionAndUpdatePortfolio(user.getUserId(),
+        userApi.addTransactionAndUpdatePortfolio(user.getUserId(),
                 new Transaction(cryptoName, amount, price, new Date(), "SELL"));
 
         // Update user data
@@ -156,23 +156,23 @@ public class UserService {
     }
 
     /**
-     * Refreshes the user's portfolio data from Firebase.
+     * Refreshes the user's portfolio data from the backend.
      *
      * @param user The User object.
      * @throws IOException If the operation fails.
      */
     public void refreshPortfolio(User user) throws IOException {
-        user.setPortfolio(firebaseClient.getPortfolioEntries(user.getUserId()));
+        user.setPortfolio(userApi.getPortfolioEntries(user.getUserId()));
     }
 
     /**
-     * Refreshes the user's transaction history from Firebase.
+     * Refreshes the user's transaction history from the backend.
      *
      * @param user The User object.
      * @throws IOException If the operation fails.
      */
     public void refreshTransactions(User user) throws IOException {
-        user.setTransactions(firebaseClient.getTransactions(user.getUserId()));
+        user.setTransactions(userApi.getTransactions(user.getUserId()));
     }
 
     /**
@@ -182,7 +182,7 @@ public class UserService {
      * @throws IOException If the operation fails.
      */
     public void resetPassword(String email) throws IOException {
-        firebaseClient.resetPassword(email);
+        userApi.resetPassword(email);
     }
 
     /**
@@ -194,7 +194,7 @@ public class UserService {
      * @throws IOException If the operation fails.
      */
     public void updateUserProfile(User user, String newUsername, String newEmail) throws IOException {
-        firebaseClient.updateUserProfile(user.getUserId(), newUsername, newEmail);
+        userApi.updateUserProfile(user.getUserId(), newUsername, newEmail);
         user.setUsername(newUsername);
         user.setEmail(newEmail);
     }
@@ -207,14 +207,13 @@ public class UserService {
      * @throws Exception If the operation fails.
      */
     public double calculatePortfolioValue(User user) throws Exception {
-        double totalValue = 0.0;
+        double totalValue = user.getCashBalance();
 
         for (PortfolioEntry entry : user.getPortfolio()) {
-            double currentPrice = cryptoClient.getCurrentPrice(entry.getCryptoName() + "-USD");
-            totalValue += entry.getAmount() * currentPrice;
+            totalValue += entry.getAmount() * cryptoApi.getCurrentPrice(entry.getCryptoName() + "-USD");
         }
 
-        return totalValue + user.getCashBalance();
+        return totalValue;
     }
 
     /**
@@ -225,7 +224,7 @@ public class UserService {
      * @throws Exception If the operation fails.
      */
     public double getCurrentValueOfHolding(PortfolioEntry entry) throws Exception {
-        double currentPrice = cryptoClient.getCurrentPrice(entry.getCryptoName() + "-USD");
+        double currentPrice = cryptoApi.getCurrentPrice(entry.getCryptoName() + "-USD");
         return entry.getAmount() * currentPrice;
     }
 
