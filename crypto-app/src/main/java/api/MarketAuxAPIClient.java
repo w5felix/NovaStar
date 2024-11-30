@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MarketAuxAPIClient {
@@ -14,7 +16,9 @@ public class MarketAuxAPIClient {
     private static final String API_TOKEN = "ZQowIU3ELta99lZVnwIWkCNf4UrXnXOPe0WzBW05";  // Replace with your actual API token
 
     // Method to get news based on a search query
-    public static void fetchNews(String searchQuery) {
+    public static List<String> fetchNews(String searchQuery) {
+        List<String> newsArticles = new ArrayList<>();
+
         try {
             // URL encode the search query to ensure it's safe for HTTP requests
             String encodedSearchQuery = java.net.URLEncoder.encode(searchQuery, "UTF-8");
@@ -46,29 +50,24 @@ public class MarketAuxAPIClient {
                 JSONArray articles = jsonResponse.getJSONArray("data");
 
                 // If no articles are found, notify the user
-                if (articles.length() == 0) {
-                    System.out.println("No results found for your search query.");
-                    return;
-                }
+
 
                 // Print each article's title, description, and URL
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject article = articles.getJSONObject(i);
-                    String title = article.getString("title");
-                    String description = article.getString("description");
+                    String title = article.getString("title"); // Adjust the key based on actual response
                     String urlArticle = article.getString("url");
-
-                    System.out.println("Title: " + title);
-                    System.out.println("Description: " + description);
-                    System.out.println("URL: " + urlArticle);
-                    System.out.println("---------------------------------------------------");
+                    // Adjust if necessary
+                    newsArticles.add(title + ": " + urlArticle);
                 }
             } else {
                 System.out.println("GET request failed, Response Code: " + responseCode);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return newsArticles;
     }
 
     public static void main(String[] args) {
