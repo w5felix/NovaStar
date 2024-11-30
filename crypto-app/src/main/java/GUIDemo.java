@@ -3,6 +3,8 @@ import entities.PortfolioEntry;
 import entities.Transaction;
 import entities.User;
 import services.UserService;
+import services.INewsService;
+import services.NewsService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 public class GUIDemo extends JFrame {
 
+    private INewsService newsService; // Depend on the interface
     private UserService userService;
     private User currentUser;
 
@@ -41,6 +44,7 @@ public class GUIDemo extends JFrame {
                 new adapters.FirebaseServiceAdapter(), // Pass the FirebaseServiceAdapter
                 new adapters.BlockchainServiceAdapter() // Pass the BlockchainServiceAdapter
         );
+        this.newsService = new NewsService();
 
         // Frame setup
         setTitle("NovaStar Cryptocurrency Trading Platform\n");
@@ -59,11 +63,10 @@ public class GUIDemo extends JFrame {
             return;
         }
 
-        // Fetch news asynchronously
         SwingUtilities.invokeLater(() -> {
             newsResultsArea.setText("Loading...");
             try {
-                List<String> articles = MarketAuxAPIClient.fetchNews(searchQuery);
+                List<String> articles = newsService.fetchNews(searchQuery); // Use INewsService
                 if (articles.isEmpty()) {
                     newsResultsArea.setText("No news articles found.");
                 } else {
