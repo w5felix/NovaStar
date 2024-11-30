@@ -1,9 +1,11 @@
 # NovaStar Cryptocurrency Trading Platform
 
 ### Authors
+We would like to acknowledge the following individuals for their significant contributions to this project:
+
 - **Emanuel Luis Platon Decena**: 
 - **Minh Khoa Doan**: 
-- **Astrid Hu**: 
+- **Astrid Hu**: Developing the news search functionality, integrating third-party APIs
 - **Felix Jinyang Wu**: 
 - **Yinzhen Zhai**: 
 
@@ -19,8 +21,8 @@ associated with traditional platforms.
 
 ## Table of Contents
 - [Features](#Features)
-- [Installation Instructions](#Installation Instructions)
-- [Usage Guide](#Usage Guide)
+- [Installation Instructions](#Installation-Instructions)
+- [Usage Guide](#Usage-Guide)
 - [License](#License)
 - [Feedback](#Feedback)
 - [Contributions](#Contributions)
@@ -93,10 +95,7 @@ Public License by the requirement of our partner. Anyone is free to share and ad
 - use the same license as this codebase, when you share and adapt the material
 - do not restrict others from doing anything this license permits
 
-Shield:
-
 This work is licensed under a [Creative Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)
-![cc](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.researchgate.net%2Ffigure%2FCreative-Commons-Attribution-NonCommercial-ShareAlike-40-International-Public_fig14_320008976&psig=AOvVaw0ma_5giqWlt8l6gWU-vsWh&ust=1733019847680000&source=images&cd=vfe&opi=89978449&ved=0CBcQjhxqFwoTCKjU65SAg4oDFQAAAAAdAAAAABAE)
 
 ## Feedback
 We value your input! If you have suggestions, ideas for new features, or feedback on how to improve the platform, 
