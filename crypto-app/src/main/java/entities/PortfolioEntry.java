@@ -5,9 +5,8 @@ package entities;
  */
 public class PortfolioEntry {
 
-    private String cryptoName; // Name of the cryptocurrency (e.g., "BTC")
-    private double amount;     // Amount of cryptocurrency held
-
+    private final String cryptoName; // Name of the cryptocurrency (e.g., "BTC")
+    private double amount;
     /**
      * Constructor to initialize a portfolio entry.
      *
@@ -72,9 +71,7 @@ public class PortfolioEntry {
      */
     @Override
     public String toString() {
-        return "PortfolioEntry{" +
-                "cryptoName='" + cryptoName + '\'' +
-                ", amount=" + amount +
-                '}';
+        return null;
     }
+
 }

@@ -248,4 +248,16 @@ public class UserService {
 
         return totalInvestment;
     }
+
+    public List<PortfolioEntry> getPortfolioEntries(User user) throws Exception {
+        return userApi.getPortfolioEntries(user.getUserId());
+    }
+
+    public List<Transaction> getTransactions(User user) throws Exception {
+        return userApi.getTransactions(user.getUserId());
+    }
+
+    public double getCurrentValue(PortfolioEntry entry) throws Exception {
+        return cryptoApi.getCurrentPrice(entry.getCryptoName() + "-USD");
+    }
 }
