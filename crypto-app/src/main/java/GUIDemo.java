@@ -1,3 +1,4 @@
+import api.MarketAuxAPIClient;
 import entities.PortfolioEntry;
 import entities.Transaction;
 import entities.User;
@@ -21,7 +22,9 @@ public class GUIDemo extends JFrame {
     private JLabel totalPortfolioValueLabel;
     private JPanel portfolioPanel;
     private JPanel transactionsPanel;
-    private JPanel cryptoPricesPanel;
+    private JPanel newsSearchPanel = new JPanel();
+    private final JTextField newsSearchField = new JTextField(30);
+    private final JTextArea newsResultsArea = new JTextArea();    private JPanel cryptoPricesPanel;
     private JLabel usernameLabel;
     private JLabel emailLabel;
 
@@ -35,12 +38,41 @@ public class GUIDemo extends JFrame {
     public GUIDemo() {
         // Initialize the user service and frame setup
         this.userService = new UserService(new api.FireBaseAPIClient(), new api.BlockChainAPIClient());
-        setTitle("Crypto Portfolio Manager");
+        setTitle("NovaStar Cryptocurrency Trading Platform\n");
         setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         showLoginScreen();
     }
+
+    // Method to search for news articles based on the user's query
+    private void searchNews() {
+        String searchQuery = newsSearchField.getText().trim();
+        if (searchQuery.isEmpty()) {
+            newsResultsArea.setText("Please enter a search query.");
+            return;
+        }
+
+        // Fetch news asynchronously
+        SwingUtilities.invokeLater(() -> {
+            newsResultsArea.setText("Loading...");
+            try {
+                List<String> articles = MarketAuxAPIClient.fetchNews(searchQuery);
+                if (articles.isEmpty()) {
+                    newsResultsArea.setText("No news articles found.");
+                } else {
+                    StringBuilder resultsText = new StringBuilder();
+                    for (String article : articles) {
+                        resultsText.append(article).append("\n");
+                    }
+                    newsResultsArea.setText(resultsText.toString());
+                }
+            } catch (Exception e) {
+                newsResultsArea.setText("Error fetching news.");
+            }
+        });
+    }
+
 
     private void showLoginScreen() {
         JPanel loginPanel = new JPanel();
@@ -151,6 +183,7 @@ public class GUIDemo extends JFrame {
         portfolioPanel = new JPanel();
         transactionsPanel = new JPanel();
         cryptoPricesPanel = new JPanel();
+        newsSearchPanel = new JPanel();
         // Header Panel with cash reserves and portfolio value
         cashReservesLabel = new JLabel("Cash Reserves: Loading...");
         cashReservesLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -168,6 +201,19 @@ public class GUIDemo extends JFrame {
         tabbedPane.addTab("Transactions", new JScrollPane(transactionsPanel));
         tabbedPane.addTab("Crypto Prices", new JScrollPane(cryptoPricesPanel));
 
+        newsSearchPanel.setLayout(new BorderLayout());
+        JPanel searchPanel = new JPanel();
+        searchPanel.add(new JLabel("Search News:"));
+        searchPanel.add(newsSearchField);
+        JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(e -> searchNews());
+        searchPanel.add(searchButton);
+
+        newsResultsArea.setEditable(false);
+        newsSearchPanel.add(searchPanel, BorderLayout.NORTH);
+        newsSearchPanel.add(new JScrollPane(newsResultsArea), BorderLayout.CENTER);
+        tabbedPane.addTab("News Search", newsSearchPanel);
+
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
 
         // Footer
@@ -183,8 +229,6 @@ public class GUIDemo extends JFrame {
         footerPanel.add(depositButton);
         footerPanel.add(withdrawButton);
         addBuyByCodeFeature(footerPanel);
-
-
 
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -575,6 +619,10 @@ public class GUIDemo extends JFrame {
                 }
             }
         }
+// Method to search for news articles based on the user's query
+
+
+
     }
 
 
