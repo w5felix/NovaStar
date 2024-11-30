@@ -96,6 +96,8 @@ Public License by the requirement of our partner. Anyone is free to share and ad
 - do not restrict others from doing anything this license permits
 
 This work is licensed under a [Creative Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)
+<img width="116" alt="cc" src="https://github.com/user-attachments/assets/40ed99c5-78f4-4462-aec6-89ff663e2164">
+
 
 ## Feedback
 We value your input! If you have suggestions, ideas for new features, or feedback on how to improve the platform, 
