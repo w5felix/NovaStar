@@ -86,7 +86,18 @@ Once the platform is installed, follow these steps to start using the software.
 - **Unable to connect to the server**: Ensure that you have a stable internet connection and that no firewalls are blocking the app.
 
 ## License
-Public domain
+We are using Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+Public License by the requirement of our partner. Anyone is free to share and adapt materials of this code base given that they do the following:
+- give appropriate credit, provide a link to the license, and indicate if changes were made
+- do not use the codebase for commercial purposes
+- use the same license as this codebase, when you share and adapt the material
+- do not restrict others from doing anything this license permits
+
+Shield:
+
+This work is licensed under a [Creative Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)
+![cc](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.researchgate.net%2Ffigure%2FCreative-Commons-Attribution-NonCommercial-ShareAlike-40-International-Public_fig14_320008976&psig=AOvVaw0ma_5giqWlt8l6gWU-vsWh&ust=1733019847680000&source=images&cd=vfe&opi=89978449&ved=0CBcQjhxqFwoTCKjU65SAg4oDFQAAAAAdAAAAABAE)
+
 ## Feedback
 We value your input! If you have suggestions, ideas for new features, or feedback on how to improve the platform, 
 please share your thoughts with us. Your feedback helps us enhance the platform to better meet your needs.
