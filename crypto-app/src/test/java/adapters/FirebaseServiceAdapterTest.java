@@ -7,7 +7,7 @@ import org.mockito.*;
 
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito .Mockito.*;
 
 class FirebaseServiceAdapterTest {
 

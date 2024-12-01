@@ -1,6 +1,6 @@
 package views;
 
-import api.BlockChainAPIClient.CryptoInfo;
+import data_access.BlockChainAPIClient.CryptoInfo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

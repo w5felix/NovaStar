@@ -1,20 +1,19 @@
 package controllers;
 
 import entities.User;
-import services.UserService;
-import services.INewsService;
+import interactors.UserService;
+import news_search.NewsSearchDataAccessInterface;
 import views.LoginView;
-import views.MainView;
 
 import javax.swing.*;
 
 public class LoginController {
 
     private final UserService userService;
-    private final INewsService newsService;
+    private final NewsSearchDataAccessInterface newsService;
     private final JFrame frame;
 
-    public LoginController(UserService userService, INewsService newsService, JFrame frame) {
+    public LoginController(UserService userService, NewsSearchDataAccessInterface newsService, JFrame frame) {
         this.userService = userService;
         this.newsService = newsService;
         this.frame = frame;

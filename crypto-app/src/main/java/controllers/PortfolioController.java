@@ -2,7 +2,7 @@ package controllers;
 
 import entities.PortfolioEntry;
 import entities.User;
-import services.UserService;
+import interactors.UserService;
 import views.PortfolioView;
 
 import java.util.List;

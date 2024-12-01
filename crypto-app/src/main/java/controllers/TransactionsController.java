@@ -2,7 +2,7 @@ package controllers;
 
 import entities.Transaction;
 import entities.User;
-import services.UserService;
+import interactors.UserService;
 import views.TransactionsView;
 
 import javax.swing.*;

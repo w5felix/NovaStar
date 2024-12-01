@@ -1,8 +1,9 @@
 package controllers;
 
 import entities.User;
-import services.INewsService;
-import services.UserService;
+import interface_adapters.news_search.NewsSearchController;
+import news_search.NewsSearchDataAccessInterface;
+import interactors.UserService;
 import views.*;
 
 import javax.swing.*;
@@ -10,14 +11,14 @@ import javax.swing.*;
 public class MainController {
 
     private final UserService userService;
-    private final INewsService newsService;
+    private final NewsSearchDataAccessInterface newsService;
     private final User currentUser;
     private final JFrame frame;
 
     private final PortfolioController portfolioController;
     private final TransactionsController transactionsController;
 
-    public MainController(UserService userService, INewsService newsService, User currentUser, JFrame frame) {
+    public MainController(UserService userService, NewsSearchDataAccessInterface newsService, User currentUser, JFrame frame) {
         this.userService = userService;
         this.newsService = newsService;
         this.currentUser = currentUser;

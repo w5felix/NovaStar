@@ -1,6 +1,6 @@
-package adapters;
+package interface_adapters;
 
-import api.BlockChainAPIClient;
+import data_access.BlockChainAPIClient;
 import interfaces.CryptoApi;
 
 /**

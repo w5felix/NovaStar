@@ -1,10 +1,12 @@
 package views;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
+
+import javax.swing.border.EmptyBorder;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class NewsSearchView extends JPanel {
 

@@ -323,7 +323,7 @@
         </module>
         <module name="VisibilityModifier">
             <property name="ignoreAnnotationCanonicalNames"
-                      value="org.junit.Rule, org.junit.jupiter.api.io.TempDir"/>
+                      value="org.junit.Rule, org.junit.jupiter.data_access.io.TempDir"/>
         </module>
 
         <!-- Coding -->

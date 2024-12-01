@@ -1,6 +1,6 @@
-package controllers;
+package interface_adapters.news_search;
 
-import services.INewsService;
+import news_search.NewsSearchDataAccessInterface;
 import views.NewsSearchView;
 
 import javax.swing.*;
@@ -8,10 +8,10 @@ import java.util.List;
 
 public class NewsSearchController {
 
-    private final INewsService newsService;
+    private final NewsSearchDataAccessInterface newsService;
     private final NewsSearchView newsSearchView;
 
-    public NewsSearchController(INewsService newsService, NewsSearchView newsSearchView) {
+    public NewsSearchController(NewsSearchDataAccessInterface newsService, NewsSearchView newsSearchView) {
         this.newsService = newsService;
         this.newsSearchView = newsSearchView;
     }

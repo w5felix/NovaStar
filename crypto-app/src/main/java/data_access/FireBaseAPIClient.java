@@ -1,13 +1,11 @@
-package api;
+package data_access;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import entities.PortfolioEntry;
 import entities.Transaction;
-import entities.User;
 import okhttp3.*;
 
-import javax.swing.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
