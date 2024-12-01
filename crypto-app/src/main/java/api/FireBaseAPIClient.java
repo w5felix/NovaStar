@@ -233,7 +233,7 @@ public class FireBaseAPIClient {
      * @param newBalance  The new cash reserve balance.
      * @throws IOException if the operation fails.
      */
-    private static void updateCashReserves(String userId, double newBalance) throws IOException {
+    static void updateCashReserves(String userId, double newBalance) throws IOException {
         JsonObject cashData = new JsonObject();
         cashData.addProperty("cashReserves", newBalance);
 
@@ -378,7 +378,7 @@ public class FireBaseAPIClient {
      * @param transaction The transaction to apply to the portfolio.
      * @throws IOException if the operation fails.
      */
-    private static void updatePortfolio(String userId, Transaction transaction) throws IOException {
+    static void updatePortfolio(String userId, Transaction transaction) throws IOException {
         Map<String, PortfolioEntry> portfolio = getPortfolio(userId);
 
         PortfolioEntry entry = portfolio.getOrDefault(transaction.getCryptoName(), new PortfolioEntry(transaction.getCryptoName(), 0));
