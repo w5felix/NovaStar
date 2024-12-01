@@ -120,7 +120,6 @@ public class GUIDemoTest {
             demo.dispose(); // Clean up after test
         });
     }
-
 }
 
 
