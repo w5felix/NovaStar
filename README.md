@@ -3,14 +3,19 @@
 ### Authors
 We would like to acknowledge the following individuals for their significant contributions to this project:
 
-- **Emanuel Luis Platon Decena**: 
-- **Minh Khoa Doan**: 
-- **Astrid Hu**: Developing the news search functionality, integrating third-party APIs
-- **Felix Jinyang Wu**: 
-- **Yinzhen Zhai**: 
+- **Emanuel Luis Platon Decena**: Responsible for ensuring the project adheres to accessibility standards and implementing clean architecture practices.
+
+- **Minh Khoa Doan**: Contributed to the development of test cases and played a role in maintaining code organization.
+
+- **Astrid Hu**: Developed the news search functionality, integrated third-party APIs, and contributed to writing and maintaining the README.
+
+- **Felix Jinyang Wu**: Major developer responsible for the implementation of the user database and cryptocurrency features.
+
+- **Yinzhen Zhai**: Focused on account security and the development of the GUI.
+
 
 ## Summary
-Cryptocurrency Trading Platform is an intuitive, robust solution designed to simplify cryptocurrency trading for 
+NovaStar Cryptocurrency Trading Platform is an intuitive, robust solution designed to simplify cryptocurrency trading for 
 beginners. The platform allows users to buy, sell, and trade a wide range of cryptocurrencies in a secure, real-time 
 environment. Built with speed, security, and simplicity in mind, it addresses the challenges of complex, inefficient, 
 or high-fee trading systems.
@@ -75,6 +80,7 @@ mvn clean install
 ## Usage Guide
 Once the platform is installed, follow these steps to start using the software.
 ### Starting the Application:
+
 1. **Launch the application**: After the build is successful, launch the application from your IDE. For most IDEs, simply locate the Main.java class and run it.
 
 2. **Sign up or log in**
