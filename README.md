@@ -33,12 +33,12 @@ associated with traditional platforms.
 - [Contributions](#Contributions)
 
 ## Features
+- **Cryptocurrency Transaction**: Trade multiple cryptocurrencies, including Bitcoin, Ethereum, and Dogecoin,
+  using USD as the primary fiat currency.
 - **Real-time Conversion Rates**: Access real-time conversion rates for various cryptocurrencies with up-to-the-minute 
 market data.
-- **Historical Data Access**: View historical transaction data to analyze past performance and make informed decisions 
+- **Historical Trades Access**: View historical transaction data to analyze past performance and make informed decisions 
 about future trades.
-- **Multi-cryptocurrency Support**: Trade multiple cryptocurrencies, including Bitcoin, Ethereum, and Dogecoin, 
-using USD as the primary fiat currency.
 - **News Search**: Provide users with a searchable news feed that allows them to find and access the latest 
 cryptocurrency news based on their specific interests.
 - **Secure Accounts**: Enhanced account security with security questions to protect user data and transactions.
