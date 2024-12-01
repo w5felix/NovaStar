@@ -90,8 +90,8 @@ Once the platform is installed, follow these steps to start using the software.
 - View real-time rates for various cryptocurrencies.
 - Place trades by selecting your preferred cryptocurrency and specifying the amount you want to buy or sell.
 
+https://github.com/user-attachments/assets/98d2e847-936c-4d97-9463-97b855e10d0c
 
-https://github.com/user-attachments/assets/96a84aaa-3a03-42d5-be8c-f8783bc6d0d5
 
 
 ### Troubleshooting Common Issues:
