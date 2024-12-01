@@ -48,7 +48,7 @@ public class NewsSearchView extends JPanel {
         searchField.addActionListener(listener);
     }
 
-    private void fireSearchEvent() {
+    void fireSearchEvent() {
         for (ActionListener listener : searchField.getActionListeners()) {
             listener.actionPerformed(null);
         }
