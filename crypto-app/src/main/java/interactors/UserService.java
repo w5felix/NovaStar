@@ -1,4 +1,4 @@
-package services;
+package interactors;
 
 import entities.PortfolioEntry;
 import entities.Transaction;

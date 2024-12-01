@@ -3,9 +3,9 @@ package experimental;
 import entities.PortfolioEntry;
 import entities.Transaction;
 import entities.User;
-import services.UserService;
-import services.INewsService;
-import services.NewsService;
+import interactors.UserService;
+import news_search.NewsSearchDataAccessInterface;
+import news_search.NewsSearchInteractor;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class GUIDemo extends JFrame {
 
-    private INewsService newsService; // Depend on the interface
+    private NewsSearchDataAccessInterface newsService; // Depend on the interface
     private UserService userService;
     private User currentUser;
 
@@ -42,10 +42,10 @@ public class GUIDemo extends JFrame {
     public GUIDemo() {
         // Initialize the user service with the adapters
         this.userService = new UserService(
-                new adapters.FirebaseServiceAdapter(), // Pass the FirebaseServiceAdapter
-                new adapters.BlockchainServiceAdapter() // Pass the BlockchainServiceAdapter
+                new interface_adapters.FirebaseServiceAdapter(), // Pass the FirebaseServiceAdapter
+                new interface_adapters.BlockchainServiceAdapter() // Pass the BlockchainServiceAdapter
         );
-        this.newsService = new NewsService();
+        this.newsService = new NewsSearchInteractor();
 
         // Frame setup
         setTitle("NovaStar Cryptocurrency Trading Platform\n");
@@ -448,8 +448,8 @@ public class GUIDemo extends JFrame {
             cryptoPricesPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Padding around the edges
 
             try {
-                List<api.BlockChainAPIClient.CryptoInfo> cryptos = api.BlockChainAPIClient.fetchPopularCryptos();
-                for (api.BlockChainAPIClient.CryptoInfo crypto : cryptos) {
+                List<data_access.BlockChainAPIClient.CryptoInfo> cryptos = data_access.BlockChainAPIClient.fetchPopularCryptos();
+                for (data_access.BlockChainAPIClient.CryptoInfo crypto : cryptos) {
                     // Create a panel for each cryptocurrency
                     JPanel cryptoCard = new JPanel(new BorderLayout());
                     cryptoCard.setBorder(BorderFactory.createCompoundBorder(
@@ -511,7 +511,7 @@ public class GUIDemo extends JFrame {
         });
     }
 
-    private void handleCryptoAction(api.BlockChainAPIClient.CryptoInfo crypto) {
+    private void handleCryptoAction(data_access.BlockChainAPIClient.CryptoInfo crypto) {
         String[] options = {"Buy", "Sell", "Cancel"};
         int choice = JOptionPane.showOptionDialog(
                 this,

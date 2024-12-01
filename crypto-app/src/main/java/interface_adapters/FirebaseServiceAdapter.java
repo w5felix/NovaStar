@@ -1,6 +1,6 @@
-package adapters;
+package interface_adapters;
 
-import api.FireBaseAPIClient;
+import data_access.FireBaseAPIClient;
 import entities.PortfolioEntry;
 import entities.Transaction;
 import interfaces.UserApi;

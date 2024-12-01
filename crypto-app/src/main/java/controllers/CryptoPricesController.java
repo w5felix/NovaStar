@@ -1,9 +1,9 @@
 package controllers;
 
-import api.BlockChainAPIClient;
-import api.BlockChainAPIClient.CryptoInfo;
+import data_access.BlockChainAPIClient;
+import data_access.BlockChainAPIClient.CryptoInfo;
 import entities.User;
-import services.UserService;
+import interactors.UserService;
 import views.CryptoPricesView;
 
 import javax.swing.*;

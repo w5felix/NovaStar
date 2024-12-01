@@ -1,11 +1,11 @@
 package main;
 
 import controllers.LoginController;
-import services.UserService;
-import adapters.FirebaseServiceAdapter;
-import adapters.BlockchainServiceAdapter;
-import services.NewsService;
-import services.INewsService;
+import interactors.UserService;
+import interface_adapters.FirebaseServiceAdapter;
+import interface_adapters.BlockchainServiceAdapter;
+import news_search.NewsSearchInteractor;
+import news_search.NewsSearchDataAccessInterface;
 
 import javax.swing.*;
 
@@ -18,7 +18,7 @@ public class Main {
                     new FirebaseServiceAdapter(),
                     new BlockchainServiceAdapter()
             );
-            INewsService newsService = new NewsService();
+            NewsSearchDataAccessInterface newsService = new NewsSearchInteractor();
 
             // Set up the main application frame
             JFrame frame = new JFrame("Crypto Portfolio Manager");

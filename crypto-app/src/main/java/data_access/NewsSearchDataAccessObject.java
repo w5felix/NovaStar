@@ -1,4 +1,4 @@
-package api;
+package data_access;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class MarketAuxAPIClient {
+public class NewsSearchDataAccessObject {
 
     private static final String API_URL = "https://api.marketaux.com/v1/news/all";
     private static final String API_TOKEN = "ZQowIU3ELta99lZVnwIWkCNf4UrXnXOPe0WzBW05";  // Replace with your actual API token

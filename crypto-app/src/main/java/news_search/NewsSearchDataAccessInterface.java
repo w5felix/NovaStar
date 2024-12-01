@@ -1,8 +1,8 @@
-package services;
+package news_search;
 
 import java.util.List;
 
-public interface INewsService {
+public interface NewsSearchDataAccessInterface {
     /**
      * Fetches news articles based on the query.
      *
