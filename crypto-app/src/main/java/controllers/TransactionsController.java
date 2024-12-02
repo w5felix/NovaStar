@@ -1,12 +1,15 @@
 package controllers;
 
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import entities.Transaction;
 import entities.User;
 import interactors.UserService;
 import views.TransactionsView;
-
-import javax.swing.*;
-import java.util.List;
 
 public class TransactionsController {
 
@@ -20,6 +23,10 @@ public class TransactionsController {
         this.transactionsView = transactionsView;
     }
 
+    /**
+     * Transaction view.
+     * @return JPanel.
+     */
     public JPanel getView() {
         loadTransactions();
         return transactionsView;
@@ -28,15 +35,20 @@ public class TransactionsController {
     private void loadTransactions() {
         SwingUtilities.invokeLater(() -> {
             try {
-                List<Transaction> transactions = currentUser.getTransactions();
+                final List<Transaction> transactions = currentUser.getTransactions();
                 transactionsView.updateTransactions(transactions);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(transactionsView, "Error loading transactions: " + e.getMessage(),
+            }
+            catch (Exception exception) {
+                JOptionPane.showMessageDialog(transactionsView, "Error loading transactions: " + exception.getMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
 
+    /**
+     * Refresh function.
+     * @throws Exception exception.
+     */
     public void refresh() throws Exception {
         transactionsView.updateTransactions(userService.getTransactions(currentUser));
 

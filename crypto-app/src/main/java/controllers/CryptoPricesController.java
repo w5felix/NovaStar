@@ -1,15 +1,21 @@
 package controllers;
 
-import data_access.BlockChainAPIClient;
-import data_access.BlockChainAPIClient.CryptoInfo;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import data_access.BlockChainApiClient;
+import data_access.BlockChainApiClient.CryptoInfo;
 import entities.User;
 import interactors.UserService;
 import views.CryptoPricesView;
 
-import javax.swing.*;
-import java.util.List;
-
 public class CryptoPricesController {
+
+    public static final String ERROR = "Error";
+    public static final String ERROR_LOAD_CRYP_PRICE = "Error loading cryptocurrency prices: ";
 
     private final UserService userService;
     private final User currentUser;
@@ -19,7 +25,8 @@ public class CryptoPricesController {
     private final TransactionsController transactionsController;
 
     public CryptoPricesController(UserService userService, User currentUser, CryptoPricesView cryptoPricesView,
-                                  PortfolioController portfolioController, TransactionsController transactionsController) {
+                                  PortfolioController portfolioController,
+                                  TransactionsController transactionsController) {
         this.userService = userService;
         this.currentUser = currentUser;
         this.cryptoPricesView = cryptoPricesView;
@@ -27,6 +34,10 @@ public class CryptoPricesController {
         this.transactionsController = transactionsController;
     }
 
+    /**
+     * A JPanel to get view.
+     * @return cryptoPricesView
+     */
     public JPanel getView() {
         loadCryptoPrices();
         return cryptoPricesView;
@@ -35,18 +46,19 @@ public class CryptoPricesController {
     private void loadCryptoPrices() {
         SwingUtilities.invokeLater(() -> {
             try {
-                List<CryptoInfo> cryptoPrices = BlockChainAPIClient.fetchPopularCryptos();
+                final List<CryptoInfo> cryptoPrices = BlockChainApiClient.fetchPopularCryptos();
                 cryptoPricesView.updateCryptoPrices(cryptoPrices, this::handleCryptoAction);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(cryptoPricesView, "Error loading cryptocurrency prices: " + e.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            catch (Exception exception) {
+                JOptionPane.showMessageDialog(cryptoPricesView,
+                        ERROR_LOAD_CRYP_PRICE + exception.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
             }
         });
     }
 
     private void handleCryptoAction(CryptoInfo crypto) {
-        String[] options = {"Buy", "Sell", "Cancel"};
-        int choice = JOptionPane.showOptionDialog(
+        final String[] options = {"Buy", "Sell", "Cancel"};
+        final int choice = JOptionPane.showOptionDialog(
                 cryptoPricesView,
                 "What would you like to do with " + crypto.getName() + "?",
                 "Buy or Sell " + crypto.getName(),
@@ -57,37 +69,44 @@ public class CryptoPricesController {
                 options[0]
         );
 
-        if (choice == 0) { // Buy
+        if (choice == 0) {
             handleBuy(crypto);
-        } else if (choice == 1) { // Sell
+        }
+        else if (choice == 1) {
             handleSell(crypto);
         }
     }
 
     private void handleBuy(CryptoInfo crypto) {
-        String amountStr = JOptionPane.showInputDialog(cryptoPricesView, "Enter the amount to buy:");
+        final String amountStr = JOptionPane.showInputDialog(cryptoPricesView, "Enter the amount to buy:");
         if (amountStr != null) {
             try {
-                double amount = Double.parseDouble(amountStr);
+                final double amount = Double.parseDouble(amountStr);
                 userService.buyCrypto(currentUser, crypto.getName(), amount);
-                JOptionPane.showMessageDialog(cryptoPricesView, "Successfully bought " + amount + " units of " + crypto.getName());
-                refreshData(); // Refresh portfolio and transactions
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(cryptoPricesView, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(cryptoPricesView,
+                        "Successfully bought " + amount + " units of " + crypto.getName());
+                refreshData();
+            }
+            catch (Exception exception) {
+                JOptionPane.showMessageDialog(cryptoPricesView,
+                        "Error: " + exception.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private void handleSell(CryptoInfo crypto) {
-        String amountStr = JOptionPane.showInputDialog(cryptoPricesView, "Enter the amount to sell:");
+        final String amountStr = JOptionPane.showInputDialog(cryptoPricesView, "Enter the amount to sell:");
         if (amountStr != null) {
             try {
-                double amount = Double.parseDouble(amountStr);
+                final double amount = Double.parseDouble(amountStr);
                 userService.sellCrypto(currentUser, crypto.getName(), amount);
-                JOptionPane.showMessageDialog(cryptoPricesView, "Successfully sold " + amount + " units of " + crypto.getName());
-                refreshData(); // Refresh portfolio and transactions
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(cryptoPricesView, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(cryptoPricesView,
+                        "Successfully sold " + amount + " units of " + crypto.getName());
+                refreshData();
+            }
+            catch (Exception exception) {
+                JOptionPane.showMessageDialog(cryptoPricesView,
+                        "Error: " + exception.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -96,9 +115,10 @@ public class CryptoPricesController {
         try {
             portfolioController.refresh();
             transactionsController.refresh();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(cryptoPricesView, "Error refreshing data: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception exception) {
+            JOptionPane.showMessageDialog(cryptoPricesView, "Error refreshing data: " + exception.getMessage(),
+                    ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
 }

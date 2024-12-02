@@ -1,5 +1,6 @@
 package experimental;
 
+import data_access.BlockChainApiClient;
 import entities.PortfolioEntry;
 import entities.Transaction;
 import entities.User;
@@ -448,8 +449,8 @@ public class GUIDemo extends JFrame {
             cryptoPricesPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Padding around the edges
 
             try {
-                List<data_access.BlockChainAPIClient.CryptoInfo> cryptos = data_access.BlockChainAPIClient.fetchPopularCryptos();
-                for (data_access.BlockChainAPIClient.CryptoInfo crypto : cryptos) {
+                List<BlockChainApiClient.CryptoInfo> cryptos = BlockChainApiClient.fetchPopularCryptos();
+                for (BlockChainApiClient.CryptoInfo crypto : cryptos) {
                     // Create a panel for each cryptocurrency
                     JPanel cryptoCard = new JPanel(new BorderLayout());
                     cryptoCard.setBorder(BorderFactory.createCompoundBorder(
@@ -511,7 +512,7 @@ public class GUIDemo extends JFrame {
         });
     }
 
-    private void handleCryptoAction(data_access.BlockChainAPIClient.CryptoInfo crypto) {
+    private void handleCryptoAction(BlockChainApiClient.CryptoInfo crypto) {
         String[] options = {"Buy", "Sell", "Cancel"};
         int choice = JOptionPane.showOptionDialog(
                 this,

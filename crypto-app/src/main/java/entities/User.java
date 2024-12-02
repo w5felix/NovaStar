@@ -10,12 +10,12 @@ import java.util.List;
  */
 public class User {
 
-    private final String userId; // Unique identifier for the user
-    private String username;// User's name
+    private final String userId;
+    private String username;
     private String email;
-    private double cashBalance; // User's cash balance
-    private List<Transaction> transactions; // User's transaction history
-    private List<PortfolioEntry> portfolio; // Portfolio holdings
+    private double cashBalance;
+    private List<Transaction> transactions;
+    private List<PortfolioEntry> portfolio;
 
     /**
      * Constructor to initialize the user object with required data.

@@ -1,10 +1,5 @@
 package data_access;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -12,26 +7,30 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 /**
  * A client for interacting with the Blockchain.com Exchange API.
- *
  * This client allows fetching cryptocurrency ticker data and provides utility
  * methods for retrieving the current price and a list of popular cryptocurrencies.
  */
-public class BlockChainAPIClient {
+public class BlockChainApiClient {
 
-    private static final String API_KEY = "8dea783c-d24c-4f6b-ad1d-87bc129e9feb"; // Replace with your API key
+    private static final String API_KEY = "8dea783c-d24c-4f6b-ad1d-87bc129e9feb";
     private static final String BASE_URL = "https://api.blockchain.com/v3/exchange";
 
     /**
      * Main method demonstrating the usage of the client.
-     *
+     * Call BlockChain Api
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
+        // Fetch and display all popular cryptocurrencies.
         try {
-            // Fetch and display all popular cryptocurrencies.
-            List<CryptoInfo> cryptos = fetchPopularCryptos();
+            final List<CryptoInfo> cryptos = fetchPopularCryptos();
             for (CryptoInfo crypto : cryptos) {
                 System.out.printf("%s (%s): $%.2f (24h: %.2f%%)%n",
                         crypto.getName(), crypto.getSymbol(), crypto.getCurrentPrice(), crypto.getPercentageChange());

@@ -1,6 +1,6 @@
 package interface_adapters;
 
-import data_access.BlockChainAPIClient;
+import data_access.BlockChainApiClient;
 import interfaces.CryptoApi;
 
 /**
@@ -11,6 +11,6 @@ public class BlockchainServiceAdapter implements CryptoApi {
     @Override
     public float getCurrentPrice(String cryptoSymbol) throws Exception {
         // Delegates the call to BlockChainAPIClient
-        return BlockChainAPIClient.getCurrentPrice(cryptoSymbol);
+        return BlockChainApiClient.getCurrentPrice(cryptoSymbol);
     }
 }

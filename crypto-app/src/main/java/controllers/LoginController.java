@@ -1,13 +1,15 @@
 package controllers;
 
+import javax.swing.JFrame;
+
 import entities.User;
 import interactors.UserService;
 import news_search.NewsSearchDataAccessInterface;
 import views.LoginView;
 
-import javax.swing.*;
-
 public class LoginController {
+
+    public static final String ERROR = "Error: ";
 
     private final UserService userService;
     private final NewsSearchDataAccessInterface newsService;
@@ -19,51 +21,59 @@ public class LoginController {
         this.frame = frame;
     }
 
+    /**
+     * Login view for starting.
+     */
     public void start() {
-        LoginView loginView = new LoginView();
+        final LoginView loginView = new LoginView();
 
-        loginView.addLoginListener(e -> handleLogin(loginView));
-        loginView.addRegisterListener(e -> handleRegister(loginView));
-        loginView.addResetPasswordListener(e -> handleResetPassword(loginView));
+        loginView.addLoginListener(actionEvent -> handleLogin(loginView));
+        loginView.addRegisterListener(actionEvent -> handleRegister(loginView));
+        loginView.addResetPasswordListener(actionEvent -> handleResetPassword(loginView));
 
         frame.setContentPane(loginView);
         frame.revalidate();
     }
 
     private void handleLogin(LoginView loginView) {
-        String email = loginView.getEmail();
-        String password = loginView.getPassword();
+        final String email = loginView.getEmail();
+        final String password = loginView.getPassword();
         try {
-            User currentUser = userService.loginUser(email, password);
+            final User currentUser = userService.loginUser(email, password);
             showMainView(currentUser);
-        } catch (Exception e) {
-            loginView.setStatusMessage("Error: " + e.getMessage());
+        }
+        catch (Exception exception) {
+            loginView.setStatusMessage(ERROR + exception.getMessage());
         }
     }
 
     private void handleRegister(LoginView loginView) {
-        String email = loginView.getEmail();
-        String password = loginView.getPassword();
+        final String email = loginView.getEmail();
+        final String password = loginView.getPassword();
         try {
-            User currentUser = userService.registerUser("New User", email, password, "What is your favorite color?", "Blue");
+            final User currentUser = userService.registerUser(
+                    "New User", email, password,
+                    "What is your favorite color?", "Blue");
             showMainView(currentUser);
-        } catch (Exception e) {
-            loginView.setStatusMessage("Error: " + e.getMessage());
+        }
+        catch (Exception exception) {
+            loginView.setStatusMessage(ERROR + exception.getMessage());
         }
     }
 
     private void handleResetPassword(LoginView loginView) {
-        String email = loginView.getEmail();
+        final String email = loginView.getEmail();
         try {
             userService.resetPassword(email);
             loginView.setStatusMessage("Password reset email sent successfully!");
-        } catch (Exception e) {
-            loginView.setStatusMessage("Error: " + e.getMessage());
+        }
+        catch (Exception exception) {
+            loginView.setStatusMessage(ERROR + exception.getMessage());
         }
     }
 
     private void showMainView(User currentUser) {
-        MainController mainController = new MainController(userService, newsService, currentUser, frame);
+        final MainController mainController = new MainController(userService, newsService, currentUser, frame);
         mainController.start();
     }
 }
