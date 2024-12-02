@@ -15,14 +15,13 @@ public class MainView extends JFrame implements PropertyChangeListener {
 
 
     public MainView(LoginView loginView,SignUpView signUpView, ForgetPasswordView forgetPasswordView,
-                    ResetView resetView, AfterLoginView afterLoginView) {
+                    AfterLoginView afterLoginView) {
         setTitle("NovaStar");
         cardLayout = new CardLayout();
         views = new JPanel(cardLayout);
         views.add(loginView, ViewModel.LOGIN_VIEW);
         views.add(signUpView, ViewModel.SIGNUP_VIEW);
         views.add(forgetPasswordView,  ViewModel.FORGET_PASSWORD_VIEW);
-        views.add(resetView, ViewModel.RESET_VIEW);
         views.add(afterLoginView, ViewModel.AFTER_LOGIN_VIEW);
         cardLayout.show(views, ViewModel.LOGIN_VIEW);
         this.add(views);

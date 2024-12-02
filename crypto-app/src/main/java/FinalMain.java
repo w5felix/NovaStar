@@ -10,7 +10,7 @@ public class FinalMain {
         ViewModel viewmodel = new ViewModel();
 
         MainView mainView = new MainView(new LoginView(viewmodel), new SignUpView(viewmodel),
-                new ForgetPasswordView(viewmodel), new ResetView(viewmodel), new AfterLoginView(viewmodel, new JFrame()));
+                new ForgetPasswordView(viewmodel), new AfterLoginView(viewmodel, new JFrame()));
         viewmodel.addPropertyChangeListener(viewmodel.CURRENT_STATE, mainView);
         mainView.setBackground(Color.blue);
         mainView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

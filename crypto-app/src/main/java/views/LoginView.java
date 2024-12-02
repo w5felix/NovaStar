@@ -1,12 +1,18 @@
 package views;
 
+import api.FireBaseAPIClient;
 import entities.User;
+import interface_adapterss.UserService;
 import interface_adapterss.ViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class LoginView extends JPanel {
+
+    private UserService userService = new UserService(
+            new interface_adapterss.FirebaseServiceAdapter(), // Pass the FirebaseServiceAdapter
+            new interface_adapterss.BlockchainServiceAdapter());
 
     private final Font font = new Font("Times New Roman", Font.PLAIN, 25);
 
@@ -47,7 +53,7 @@ public class LoginView extends JPanel {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JLabel label4 = new JLabel("Username or email address");
+        JLabel label4 = new JLabel("email address");
         label4.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         label4.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label4);
@@ -82,10 +88,10 @@ public class LoginView extends JPanel {
 
         loginButton.addActionListener(e -> {
             try{
-                api.FireBaseAPIClient.checkUserByUsernameOrEmail(nameField.getText());
+/*                api.FireBaseAPIClient.checkUserByUserEmail(nameField.getText());
                 api.FireBaseAPIClient.checkPasswordByUsernameOrEmail(passwordField.getPassword(),nameField.getText());
-                User user = api.FireBaseAPIClient.getExistedUserFromUsernameOrEmail(nameField.getText());
-                viewModel.setCurrentUser(user);
+                User user = api.FireBaseAPIClient.getExistedUserFromUsernameOrEmail(nameField.getText());*/
+                handleLogin(nameField.getText(), new String(passwordField.getPassword()), new JLabel(""));
                 this.viewModel.setCurrentState(ViewModel.AFTER_LOGIN_VIEW);
                 nameField.setText("");
                 passwordField.setText("");
@@ -108,5 +114,13 @@ public class LoginView extends JPanel {
             passwordField.setText("");
         });
 
+    }
+
+    private void handleLogin(String email, String password, JLabel statusLabel) {
+        try {
+            viewModel.setCurrentUser(userService.loginUser(email, password));
+        } catch (Exception e) {
+            statusLabel.setText("Error: " + e.getMessage());
+        }
     }
 }

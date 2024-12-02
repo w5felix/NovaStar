@@ -15,8 +15,6 @@ public class ViewModel {
 
     public static final String FORGET_PASSWORD_VIEW = "forgetPasswordView";
 
-    public static final String RESET_VIEW = "resetView";
-
     public static final String AFTER_LOGIN_VIEW = "afterLogin";
 
     public static final String TRANSACTION_VIEW = "transaction";

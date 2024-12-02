@@ -476,23 +476,47 @@ public class FireBaseAPIClient {
         }
     }
 
-    public static void checkUserByUsernameOrEmail(String text) {
+    public static void resetPassword(String email) throws IOException {
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("requestType", "PASSWORD_RESET");
+        requestBody.addProperty("email", email);
 
+        RequestBody body = RequestBody.create(
+                requestBody.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url("https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=" + API_KEY)
+                .post(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Error resetting password: " + response.body().string());
+            }
+        }
     }
 
-    public static void checkSecurityQuestionMatchingUserInformation(JTextField resetText, String text) {
+    public static void updateUserProfile(String userId, String newUsername, String newEmail) throws IOException {
+        JsonObject userDetails = new JsonObject();
+        userDetails.addProperty("username", newUsername);
+        userDetails.addProperty("email", newEmail);
+
+        RequestBody body = RequestBody.create(
+                userDetails.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(DATABASE_URL + "users/" + userId + ".json")
+                .patch(body) // Firebase supports PATCH for partial updates
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Error updating user profile: " + response.body().string());
+            }
+        }
     }
-
-    public static void checkAnswerMatchingSecurityQuestion(String text, String text1) {
-    }
-
-    public static void changePasswordByUsernameOrEmail(String username) {
-    }
-
-    public static void checkPasswordByUsernameOrEmail(char[] password, String text) {
-
-    }
-
-    public static User getExistedUserFromUsernameOrEmail(String text) {
-    return null;}
 }

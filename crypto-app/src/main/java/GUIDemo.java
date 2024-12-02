@@ -1,3 +1,4 @@
+/*
 import api.BlockChainAPIClient;
 import entities.PortfolioEntry;
 import entities.Transaction;
@@ -10,10 +11,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+*/
 /**
  * A GUI demo for the Crypto Portfolio Management System.
  * Allows users to log in, manage their portfolio, and view real-time updates of portfolio values.
- */
+ *//*
+
 public class GUIDemo extends JFrame {
 
     private User currentUser;
@@ -294,3 +297,4 @@ public class GUIDemo extends JFrame {
         super.dispose();
     }
 }
+*/

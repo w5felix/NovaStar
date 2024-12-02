@@ -1,3 +1,4 @@
+/*
 package views;
 
 import interface_adapterss.ViewModel;
@@ -34,3 +35,4 @@ public class ResetView extends JPanel {
         });
     }
 }
+*/

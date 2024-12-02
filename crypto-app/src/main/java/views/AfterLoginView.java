@@ -101,6 +101,8 @@ public class AfterLoginView extends JPanel {
             try {
                 double cashBalance = currentUser.getCashBalance();
                 double portfolioValue = currentUser.calculatePortfolioValue();
+
+
                 cashReservesLabel.setText(String.format("Cash Reserves: $%.2f", cashBalance));
                 totalPortfolioValueLabel.setText(String.format("Total Portfolio Value: $%.2f", portfolioValue));
             } catch (Exception e) {

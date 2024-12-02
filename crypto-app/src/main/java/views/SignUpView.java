@@ -1,12 +1,17 @@
 package views;
 
 import entities.User;
+import interface_adapterss.UserService;
 import interface_adapterss.ViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SignUpView extends JPanel {
+
+    private UserService userService = new UserService(
+            new interface_adapterss.FirebaseServiceAdapter(), // Pass the FirebaseServiceAdapter
+            new interface_adapterss.BlockchainServiceAdapter());
 
     private JButton signUpButton = new JButton("Sign Up");
 
@@ -107,8 +112,7 @@ public class SignUpView extends JPanel {
 
         User user = handleRegister(username, email, password, securityQuestion, questionAnswer);
 
-/*        if (user != null){*/
-        if (1 != 2) {
+        if (user != null){
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success",
                     JOptionPane.INFORMATION_MESSAGE);
             viewmodel.setCurrentUser(user);
@@ -120,14 +124,19 @@ public class SignUpView extends JPanel {
             answerField.setText("");
 
             viewmodel.setCurrentState(ViewModel.LOGIN_VIEW);
-        } /*else {
+        } else {
             JOptionPane.showMessageDialog(this, "Registration Failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-        }*/
+            nameField.setText("");
+            emailField.setText("");
+            passwordField.setText("");
+            verifyQuestionBox.setSelectedIndex(0);
+            answerField.setText("");
+        }
     }
 
     private User handleRegister(String username, String email, String password, String securityQuestion, String questionAnswer) {
         try {
-            User newUser = new User(username, email, password, securityQuestion, questionAnswer);
+            User newUser =  userService.registerUser(username, email, password, securityQuestion, questionAnswer);
             System.out.println("Registration successful! Your User ID: " + newUser.getUserId());
             return newUser;
         } catch (Exception e) {
