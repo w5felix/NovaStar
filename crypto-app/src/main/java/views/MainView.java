@@ -13,6 +13,7 @@ public class MainView extends JPanel {
     private final JButton depositButton = new JButton("Deposit Cash");
     private final JButton withdrawButton = new JButton("Withdraw Cash");
     private final JButton buyCryptoButton = new JButton("Buy Crypto");
+    private final JButton sellCryptoButton = new JButton("Sell Crypto");
 
     public MainView() {
         setLayout(new BorderLayout());
@@ -38,6 +39,7 @@ public class MainView extends JPanel {
         footerPanel.add(depositButton);
         footerPanel.add(withdrawButton);
         footerPanel.add(buyCryptoButton);
+        footerPanel.add(sellCryptoButton);
 
         add(headerPanel, BorderLayout.NORTH);
         add(tabbedPane, BorderLayout.CENTER);
@@ -54,6 +56,10 @@ public class MainView extends JPanel {
 
     public void setBuyCryptoAction(ActionListener actionListener) {
         buyCryptoButton.addActionListener(actionListener);
+    }
+
+    public void setSellCryptoAction(ActionListener actionListener) { // New setter
+        sellCryptoButton.addActionListener(actionListener);
     }
 
     public void updateCashReserves(double cashReserves) {

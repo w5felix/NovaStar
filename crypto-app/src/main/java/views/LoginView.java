@@ -85,6 +85,63 @@ public class LoginView extends JPanel {
         statusLabel.setText(message);
     }
 
+    public void displayErrorMessage(String jsonResponse) {
+        try {
+            // Parse the JSON response to extract the "message" field
+            int secondCurlyIndex = jsonResponse.indexOf("{", jsonResponse.indexOf("{") + 1);
+            if (secondCurlyIndex != -1) {
+                jsonResponse = jsonResponse.substring(secondCurlyIndex);
+            }
+            String message = new org.json.JSONObject(jsonResponse).optString("message", "An error occurred!");
+
+            // Set the extracted message as the status label
+            setStatusMessage(message);
+            statusLabel.setForeground(Color.RED); // Start with red text
+            statusLabel.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 20));
+
+            // Start animation
+            Timer animationTimer = new Timer(50, new ActionListener() {
+                private int step = 0;
+                private final int maxSteps = 20; // Number of animation steps
+                private final float baseFontSize = 20f;
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Change the text color to random bright colors
+                    statusLabel.setForeground(new Color(
+                            (int) (Math.random() * 255),
+                            (int) (Math.random() * 255),
+                            (int) (Math.random() * 255)
+                    ));
+
+                    // Apply a goofy scaling effect
+                    float scale = 1.0f + 0.1f * (float) Math.sin(step * Math.PI / maxSteps);
+                    statusLabel.setFont(statusLabel.getFont().deriveFont(baseFontSize * scale));
+
+                    // Increment animation step
+                    step++;
+                    if (step > maxSteps) {
+                        ((Timer) e.getSource()).stop();
+
+                        // Reset to normal style after animation
+                        statusLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+                        statusLabel.setForeground(Color.PINK);
+                    }
+
+                    // Repaint the label to reflect changes
+                    statusLabel.repaint();
+                }
+            });
+
+            animationTimer.start();
+        } catch (Exception ex) {
+            setStatusMessage("⚠️ Error parsing message!"); // Fallback error
+            ex.printStackTrace(); // Log the exception for debugging
+        }
+    }
+
+
+
     public void addLoginListener(ActionListener listener) {
         loginButton.addActionListener(listener);
     }

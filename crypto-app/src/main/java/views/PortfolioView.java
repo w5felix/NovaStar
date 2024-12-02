@@ -1,6 +1,6 @@
 package views;
 
-import entities.PortfolioEntry;
+import domain.entities.PortfolioEntry;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +32,7 @@ public class PortfolioView extends JPanel {
         } else {
             for (PortfolioEntry entry : portfolio) {
                 // Create a portfolio card for each entry
+
                 JPanel portfolioCard = new JPanel(new BorderLayout());
                 portfolioCard.setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(new Color(200, 200, 200)),
@@ -43,7 +44,7 @@ public class PortfolioView extends JPanel {
                 JLabel nameLabel = new JLabel(entry.getCryptoName());
                 nameLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
 
-                // Value and growth label
+                // Value, growth, and book cost (initial investment)
                 double currentValue = dataHandler.getCurrentValue(entry);
                 double initialInvestment = dataHandler.getInitialInvestment(entry);
                 double growth = currentValue - initialInvestment;
@@ -53,9 +54,21 @@ public class PortfolioView extends JPanel {
                 valueLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
                 valueLabel.setForeground(growth >= 0 ? new Color(76, 175, 80) : new Color(244, 67, 54));
 
+                JLabel coinsLabel = new JLabel(String.format("Coins Held: %.4f", entry.getAmount()));
+                coinsLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
+
+                JLabel bookCostLabel = new JLabel(String.format("Book Cost: $%.2f", initialInvestment));
+                bookCostLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
+
                 // Add labels to the card
+                JPanel infoPanel = new JPanel(new GridLayout(3, 1)); // Updated to fit three labels
+                infoPanel.setOpaque(false);
+                infoPanel.add(valueLabel);
+                infoPanel.add(coinsLabel);
+                infoPanel.add(bookCostLabel);
+
                 portfolioCard.add(nameLabel, BorderLayout.WEST);
-                portfolioCard.add(valueLabel, BorderLayout.EAST);
+                portfolioCard.add(infoPanel, BorderLayout.EAST);
 
                 // Add the card to the panel
                 portfolioPanel.add(portfolioCard);
@@ -66,6 +79,8 @@ public class PortfolioView extends JPanel {
         portfolioPanel.revalidate();
         portfolioPanel.repaint();
     }
+
+
 
     /**
      * Displays an error message to the user.

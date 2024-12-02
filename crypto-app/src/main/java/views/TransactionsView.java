@@ -1,6 +1,6 @@
 package views;
 
-import entities.Transaction;
+import domain.entities.Transaction;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
