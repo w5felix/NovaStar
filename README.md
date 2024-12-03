@@ -1,14 +1,21 @@
 # NovaStar Cryptocurrency Trading Platform
 
 ### Authors
-- **Emanuel Luis Platon Decena**: 
-- **Minh Khoa Doan**: 
-- **Astrid Hu**: 
-- **Felix Jinyang Wu**: 
-- **Yinzhen Zhai**: 
+We would like to acknowledge the following individuals for their significant contributions to this project:
+
+- **Emanuel Luis Platon Decena**: Responsible for ensuring the project adheres to accessibility standards and implementing clean architecture practices.
+
+- **Minh Khoa Doan**: Contributed to the development of test cases and played a role in maintaining code organization.
+
+- **Astrid Hu**: Developed the news search functionality, integrated third-party APIs, and contributed to writing and maintaining the README.
+
+- **Felix Jinyang Wu**: Major developer responsible for the implementation of the user database and cryptocurrency features.
+
+- **Yinzhen Zhai**: Focused on account security and the development of the GUI.
+
 
 ## Summary
-Cryptocurrency Trading Platform is an intuitive, robust solution designed to simplify cryptocurrency trading for 
+NovaStar Cryptocurrency Trading Platform is an intuitive, robust solution designed to simplify cryptocurrency trading for 
 beginners. The platform allows users to buy, sell, and trade a wide range of cryptocurrencies in a secure, real-time 
 environment. Built with speed, security, and simplicity in mind, it addresses the challenges of complex, inefficient, 
 or high-fee trading systems.
@@ -19,19 +26,19 @@ associated with traditional platforms.
 
 ## Table of Contents
 - [Features](#Features)
-- [Installation Instructions](#Installation Instructions)
-- [Usage Guide](#Usage Guide)
+- [Installation Instructions](#Installation-Instructions)
+- [Usage Guide](#Usage-Guide)
 - [License](#License)
 - [Feedback](#Feedback)
 - [Contributions](#Contributions)
 
 ## Features
+- **Cryptocurrency Transaction**: Trade multiple cryptocurrencies, including Bitcoin, Ethereum, and Dogecoin,
+  using USD as the primary fiat currency.
 - **Real-time Conversion Rates**: Access real-time conversion rates for various cryptocurrencies with up-to-the-minute 
 market data.
-- **Historical Data Access**: View historical transaction data to analyze past performance and make informed decisions 
+- **Historical Trades Access**: View historical transaction data to analyze past performance and make informed decisions 
 about future trades.
-- **Multi-cryptocurrency Support**: Trade multiple cryptocurrencies, including Bitcoin, Ethereum, and Dogecoin, 
-using USD as the primary fiat currency.
 - **News Search**: Provide users with a searchable news feed that allows them to find and access the latest 
 cryptocurrency news based on their specific interests.
 - **Secure Accounts**: Enhanced account security with security questions to protect user data and transactions.
@@ -48,11 +55,11 @@ Any modern IDE (e.g., IntelliJ IDEA, Eclipse)
 ### Steps to Install:
 1. **Clone the repository**
 ```bash
-git clone https://github.com/w5felix/doge.git
+git clone https://github.com/w5felix/NovaStar.git
 ```
 2. **Navigate to the project directory**
 ```bash
-cd doge
+cd NovaStar
 ```
 
 ### Technical Requirements
@@ -73,6 +80,7 @@ mvn clean install
 ## Usage Guide
 Once the platform is installed, follow these steps to start using the software.
 ### Starting the Application:
+
 1. **Launch the application**: After the build is successful, launch the application from your IDE. For most IDEs, simply locate the Main.java class and run it.
 
 2. **Sign up or log in**
@@ -82,11 +90,25 @@ Once the platform is installed, follow these steps to start using the software.
 - View real-time rates for various cryptocurrencies.
 - Place trades by selecting your preferred cryptocurrency and specifying the amount you want to buy or sell.
 
+https://github.com/user-attachments/assets/98d2e847-936c-4d97-9463-97b855e10d0c
+
+
+
 ### Troubleshooting Common Issues:
 - **Unable to connect to the server**: Ensure that you have a stable internet connection and that no firewalls are blocking the app.
 
 ## License
-Public domain
+We are using Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+Public License by the requirement of our partner. Anyone is free to share and adapt materials of this code base given that they do the following:
+- give appropriate credit, provide a link to the license, and indicate if changes were made
+- do not use the codebase for commercial purposes
+- use the same license as this codebase, when you share and adapt the material
+- do not restrict others from doing anything this license permits
+
+This work is licensed under a [Creative Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)
+<img width="116" alt="cc" src="https://github.com/user-attachments/assets/40ed99c5-78f4-4462-aec6-89ff663e2164">
+
+
 ## Feedback
 We value your input! If you have suggestions, ideas for new features, or feedback on how to improve the platform, 
 please share your thoughts with us. Your feedback helps us enhance the platform to better meet your needs.
